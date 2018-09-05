@@ -105,5 +105,12 @@ RUN sh composer.sh --install-dir=/usr/local/bin --filename=composer \
 COPY ./php.ini /usr/local/etc/php/php.ini
 COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf
 
+#Install NPM
+apk add --update nodejs nodejs-npm
+
+#Permissions
+chmod -Rf 2770 /var/www/.npm-global
+chown -Rf apache.apache /var/www/.npm-global
+
 #Remove useless config
 RUN rm -rf /etc/php7/php-fpm.d

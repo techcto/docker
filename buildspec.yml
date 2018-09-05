@@ -6,7 +6,8 @@ phases:
     commands:
       - echo "Login to DockerHub!"
       - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
-      - docker build --tag "techcto/docker-php-fpm-7.2:latest" --file php/php-fpm-7.2/Dockerfile .
+      - cd php/php-fpm-7.2
+      - docker build --tag "techcto/docker-php-fpm-7.2:latest" .
       - docker push "techcto/docker-php-fpm-7.2:latest"
   post_build:
     commands:
