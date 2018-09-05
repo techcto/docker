@@ -8,7 +8,8 @@ ENV TIDY_VERSION=5.1.25
 RUN apk add --no-cache \
 		bash \
 		git \
-		sed
+		sed \
+		python
 
 RUN set -ex; \
 	\
