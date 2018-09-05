@@ -4,7 +4,7 @@ version: 0.2
 phases:
   build:
     commands:
-      - yum -y install docker
+      - yum -y install docker-ce
       - curl -qL -o jq https://stedolan.github.io/jq/download/linux64/jq && chmod +x ./jq
       - curl -O https://bootstrap.pypa.io/get-pip.py
       - python get-pip.py
