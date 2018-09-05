@@ -5,12 +5,6 @@ RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositor
 ENV MEMCACHE_VERSION 2.2.0
 ENV TIDY_VERSION=5.1.25
 
-RUN apk add --no-cache \
-		bash \
-		git \
-		sed \
-		python
-
 RUN set -ex; \
 	\
 	apk add --no-cache --virtual .build-deps \
@@ -29,10 +23,21 @@ RUN set -ex; \
 		libtool \
 		libxml2-dev \
 		libxslt-dev \
+		make \
+		gcc \
+		g++ \
+		python \
+		nodejs \
+		nodejs-npm \
+		bash \
+		git \
+		sed \
 		openldap-dev \
 		pcre-dev \
         make zip unzip wget curl cmake \
-	; 
+	;
+
+RUN npm install --production --silent
 
 RUN pecl install mcrypt-1.0.1;
 RUN docker-php-ext-enable mcrypt;
@@ -105,9 +110,6 @@ RUN sh composer.sh --install-dir=/usr/local/bin --filename=composer \
 
 COPY ./php.ini /usr/local/etc/php/php.ini
 COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf
-
-#Install NPM
-RUN apk add --update nodejs nodejs-npm
 
 #Remove useless config
 RUN rm -rf /etc/php7/php-fpm.d
