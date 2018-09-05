@@ -14,7 +14,11 @@ phases:
       - aws configure set aws_access_key_id `./jq -r '.AccessKeyId' aws_credentials.json`
       - aws configure set aws_secret_access_key `./jq -r '.SecretAccessKey' aws_credentials.json`
       - aws configure set aws_session_token `./jq -r '.Token' aws_credentials.json`
-      - aws s3 sync aws s3://solodev-aws-ha/aws --delete
+      - echo "Login to DockerHub"
+      - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
+      - docker build --tag "techcto/docker-php-fpm-7.2:latest"
+        --file php/php-fpm-7.2/Dockerfile
+      - docker push "techcto/docker-php-fpm-7.2:latest"
   post_build:
     commands:
       - echo "S3 synced on `date`"
