@@ -106,11 +106,7 @@ COPY ./php.ini /usr/local/etc/php/php.ini
 COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf
 
 #Install NPM
-apk add --update nodejs nodejs-npm
-
-#Permissions
-chmod -Rf 2770 /var/www/.npm-global
-chown -Rf apache.apache /var/www/.npm-global
+RUN apk add --update nodejs nodejs-npm
 
 #Remove useless config
 RUN rm -rf /etc/php7/php-fpm.d
