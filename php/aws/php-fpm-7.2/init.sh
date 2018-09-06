@@ -80,7 +80,7 @@ mv composer.phar /usr/bin/composer
 
 #Install Tidy
 TIDY_VERSION=5.1.25
-RUN mkdir -p /usr/local/src
+mkdir -p /usr/local/src
 cd /usr/local/src
 curl -q https://codeload.github.com/htacg/tidy-html5/tar.gz/$TIDY_VERSION | tar -xz
 cd tidy-html5-$TIDY_VERSION/build/cmake
@@ -128,6 +128,5 @@ echo "zend_extension=/opt/remi/php72/root/usr/lib64/php/modules/ioncube_loader_l
 service httpd restart
 
 #Cleanup
-usermod -a -G apache ec2-user
 rm -Rf /root/.ssh
 rm -Rf /home/ec2-user/.ssh
