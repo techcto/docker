@@ -1,4 +1,5 @@
 FROM amazonlinux:1
 
-RUN chmod +x ./init.sh
-RUN ./init.sh
+COPY init.sh /init.sh
+RUN chmod +x /init.sh
+RUN /init.sh
