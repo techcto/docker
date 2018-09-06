@@ -34,7 +34,7 @@ RUN set -ex; \
 		sed \
 		openldap-dev \
 		pcre-dev \
-        make zip unzip wget curl cmake \
+        zip unzip wget curl cmake \
 	;
 
 RUN npm install --production --silent
