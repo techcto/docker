@@ -12,6 +12,9 @@ phases:
       - cd ../../aws/php-fpm-7.2
       - docker build --tag "techcto/aws-php-fpm-7.2:latest" .
       - docker push "techcto/aws-php-fpm-7.2:latest"
+      - cd ../../python/codebuild
+      - docker build --tag "techcto/python-codebuild:latest" .
+      - docker push "techcto/python-codebuild:latest"
   post_build:
     commands:
       - echo "Docker image pushed on `date`"
