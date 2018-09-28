@@ -7,17 +7,17 @@ phases:
       - echo "Login to DockerHub!"
       - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
       - cd python/codebuild
-      - docker build --tag "techcto/python-codebuild:latest" .
-      - docker push "techcto/python-codebuild:latest"
-      - cd ../../php/alpine/php-fpm-7.2
-      - docker build --tag "techcto/docker-php-fpm-7.2:latest" .
-      - docker push "techcto/docker-php-fpm-7.2:latest"
+      # - docker build --tag "techcto/python-codebuild:latest" .
+      # - docker push "techcto/python-codebuild:latest"
+      # - cd ../../php/alpine/php-fpm-7.2
+      # - docker build --tag "techcto/docker-php-fpm-7.2:latest" .
+      # - docker push "techcto/docker-php-fpm-7.2:latest"
       - cd ../../aws/php-fpm-7.2
       - docker build --tag "techcto/aws-php-fpm-7.2:latest" .
       - docker push "techcto/aws-php-fpm-7.2:latest"
-      - cd ../php-fpm-5.6
-      - docker build --tag "techcto/aws-php-fpm-5.6:latest" .
-      - docker push "techcto/aws-php-fpm-5.6:latest"
+      # - cd ../php-fpm-5.6
+      # - docker build --tag "techcto/aws-php-fpm-5.6:latest" .
+      # - docker push "techcto/aws-php-fpm-5.6:latest"
   post_build:
     commands:
       - echo "Docker image pushed on `date`"
