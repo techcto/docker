@@ -49,8 +49,7 @@ RUN mkdir -p /usr/local/src \
     && cmake ../.. && make install \
     && ln -s tidybuffio.h ../../../../include/buffio.h \
     && cd /usr/local/src \
-    && rm -rf /usr/local/src/tidy-html5-$TIDY_VERSION \
-    && docker-php-ext-install tidy
+    && rm -rf /usr/local/src/tidy-html5-$TIDY_VERSION
 
 RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-install \
@@ -73,6 +72,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 		sysvmsg \
 		sysvsem \
 		sysvshm \
+		tidy \
 		wddx \
 		xmlrpc \
 		xsl \ 
