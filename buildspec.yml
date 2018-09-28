@@ -9,7 +9,7 @@ phases:
       - cd python/codebuild
       # - docker build --tag "techcto/python-codebuild:latest" .
       # - docker push "techcto/python-codebuild:latest"
-      # - cd ../../php/alpine/php-fpm-7.2
+      - cd ../../php/alpine/php-fpm-7.2
       # - docker build --tag "techcto/docker-php-fpm-7.2:latest" .
       # - docker push "techcto/docker-php-fpm-7.2:latest"
       - cd ../../aws/php-fpm-7.2
