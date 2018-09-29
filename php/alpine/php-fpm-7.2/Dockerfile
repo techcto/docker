@@ -32,6 +32,7 @@ RUN set -ex; \
 		bash \
 		git \
 		sed \
+		tidyhtml-dev \
 		openldap-dev \
 		pcre-dev \
         zip unzip wget curl cmake \
@@ -40,16 +41,6 @@ RUN set -ex; \
 RUN npm install --production --silent
 RUN pecl install mcrypt-1.0.1;
 RUN docker-php-ext-enable mcrypt;
-
-#Tidy
-RUN mkdir -p /usr/local/src \
-    && cd /usr/local/src \
-    && curl -q https://codeload.github.com/htacg/tidy-html5/tar.gz/$TIDY_VERSION | tar -xz \
-    && cd tidy-html5-$TIDY_VERSION/build/cmake \
-    && cmake ../.. && make install \
-    && ln -s tidybuffio.h ../../../../include/buffio.h \
-    && cd /usr/local/src \
-    && rm -rf /usr/local/src/tidy-html5-$TIDY_VERSION
 
 RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-install \
