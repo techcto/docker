@@ -4,6 +4,7 @@ RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositor
 
 ENV MEMCACHE_VERSION 2.2.0
 ENV TIDY_VERSION=5.1.25
+RUN apk update
 
 RUN set -ex; \
 	\
