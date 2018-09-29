@@ -32,12 +32,12 @@ RUN set -ex; \
 		bash \
 		git \
 		sed \
-		tidyhtml-dev \
 		openldap-dev \
 		pcre-dev \
         zip unzip wget curl cmake \
 	;
 
+RUN apk add tidyhtml-dev
 RUN npm install --production --silent
 RUN pecl install mcrypt-1.0.1;
 RUN docker-php-ext-enable mcrypt;
@@ -91,7 +91,6 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
         oauth \
 		redis \
 		ssh2 \
-		tidy \
 	; \
 	runDeps="$( \
 		scanelf --needed --nobanner --recursive \
