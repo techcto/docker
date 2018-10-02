@@ -7,11 +7,11 @@ phases:
       - echo "Login to DockerHub!"
       - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
       - cd python/codebuild
-      - docker build --tag "techcto/python-codebuild:latest" .
-      - docker push "techcto/python-codebuild:latest"
+      # - docker build --tag "techcto/python-codebuild:latest" .
+      # - docker push "techcto/python-codebuild:latest"
       - cd ../duplicity
-      # - docker build --tag "techcto/duplicity:latest" .
-      # - docker push "techcto/duplicity:latest"
+      - docker build --tag "techcto/duplicity:latest" .
+      - docker push "techcto/duplicity:latest"
       # - cd ../../php/alpine/php-fpm-7.2
       # - docker build --tag "techcto/docker-php-fpm-7.2:latest" .
       # - docker push "techcto/docker-php-fpm-7.2:latest"
