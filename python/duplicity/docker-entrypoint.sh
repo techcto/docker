@@ -1,9 +1,7 @@
 #!/bin/bash
 
-case $PROCESS in
-    "restore")
-        /root/restore.sh
-        ;;
-    *)
-        /root/backup.sh
-        ;
+if [ "$PROCESS" == "restore" ]; then
+    /root/restore.sh
+else
+    /root/backup.sh
+fi
