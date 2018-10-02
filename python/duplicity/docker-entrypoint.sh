@@ -1,11 +1,9 @@
-#!/bin/sh
-set -eo pipefail
+#!/bin/bash
 
-$MOUNT = $1
-$PASSWORD = $2
+$PROCESS = $1
 
-case $2 in
-    restore)
+case $PROCESS in
+    "restore")
         /root/restore.sh
         ;;
     *)

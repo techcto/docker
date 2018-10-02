@@ -1,12 +1,14 @@
 echo "Install restore scripts"
+wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+rpm -Uvh epel-release-latest-6.noarch.rpm
 yum install -y duplicity duply python-boto mysql --enablerepo=epel
 curl -qL -o jq https://stedolan.github.io/jq/download/linux64/jq && chmod +x ./jq
 
 #Backup Script
 echo "Create mysql backup script"
 echo '#!/bin/bash' > /root/dumpmysql.sh
-echo "mkdir -p /var/www/Solodev/clients/solodev/dbdumps" >> /root/dumpmysql.sh
-echo "PWD=/var/www/Solodev/clients/solodev/dbdumps" >> /root/dumpmysql.sh
+echo "mkdir -p $MOUNT/clients/solodev/dbdumps" >> /root/dumpmysql.sh
+echo "PWD=$MOUNT/clients/solodev/dbdumps" >> /root/dumpmysql.sh
 echo 'DBFILE=$PWD/databases.txt' >> /root/dumpmysql.sh
 echo 'rm -f $DBFILE' >> /root/dumpmysql.sh
 echo "/usr/bin/mysql -u root -p$PASSWORD mysql -Ns -e \"show databases\" > \$DBFILE" >> /root/dumpmysql.sh
