@@ -1,4 +1,5 @@
 echo "Install restore scripts"
+yum install -y wget
 wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
 rpm -Uvh epel-release-latest-6.noarch.rpm
 yum install -y duplicity duply python-boto mysql --enablerepo=epel

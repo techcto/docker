@@ -10,14 +10,14 @@ phases:
       - docker build --tag "techcto/python-codebuild:latest" .
       - docker push "techcto/python-codebuild:latest"
       - cd ../duplicity
-      - docker build --tag "techcto/duplicity:latest" .
-      - docker push "techcto/duplicity:latest"
-      - cd ../../php/alpine/php-fpm-7.2
-      - docker build --tag "techcto/docker-php-fpm-7.2:latest" .
-      - docker push "techcto/docker-php-fpm-7.2:latest"
-      - cd ../../aws/php-fpm-7.2
-      - docker build --tag "techcto/aws-php-fpm-7.2:latest" .
-      - docker push "techcto/aws-php-fpm-7.2:latest"
+      # - docker build --tag "techcto/duplicity:latest" .
+      # - docker push "techcto/duplicity:latest"
+      # - cd ../../php/alpine/php-fpm-7.2
+      # - docker build --tag "techcto/docker-php-fpm-7.2:latest" .
+      # - docker push "techcto/docker-php-fpm-7.2:latest"
+      # - cd ../../aws/php-fpm-7.2
+      # - docker build --tag "techcto/aws-php-fpm-7.2:latest" .
+      # - docker push "techcto/aws-php-fpm-7.2:latest"
       # - cd ../php-fpm-5.6
       # - docker build --tag "techcto/aws-php-fpm-5.6:latest" .
       # - docker push "techcto/aws-php-fpm-5.6:latest"
