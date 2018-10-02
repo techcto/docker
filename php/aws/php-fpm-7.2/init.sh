@@ -55,7 +55,7 @@ echo "</FilesMatch>" >> /etc/httpd/conf.d/php72-php.conf
 echo "security.limit_extensions = .php .stml" >> /etc/opt/remi/php72/php-fpm.d/www.conf
 echo "listen = /run/php-fpm/www.sock" >> /etc/opt/remi/php72/php-fpm.d/www.conf
 echo "listen.owner = apache" >> /etc/opt/remi/php72/php-fpm.d/www.conf
-echo "listen.mode = 0660" >> //etc/opt/remi/php72/php-fpm.d/www.conf
+echo "listen.mode = 0660" >> /etc/opt/remi/php72/php-fpm.d/www.conf
 
 #Install Node
 mkdir -p /var/www/.npm
