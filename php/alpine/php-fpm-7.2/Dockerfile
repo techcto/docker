@@ -93,6 +93,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
         oauth \
 		redis \
 		ssh2 \
+		tidy \
 	; \
 	runDeps="$( \
 		scanelf --needed --nobanner --recursive \
