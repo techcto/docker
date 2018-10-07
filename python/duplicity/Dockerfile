@@ -70,10 +70,10 @@ RUN apk upgrade --update && \
       openssl && \
     rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
-COPY python/duplicity/init.sh /root/init.sh
+COPY init.sh /root/init.sh
 RUN chmod +x /root/init.sh
 
 #Entrypoint
-COPY python/duplicity/docker-entrypoint.sh /docker-entrypoint.sh
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod a+rx /docker-entrypoint.sh
 ENTRYPOINT ["sh", "/docker-entrypoint.sh"]
