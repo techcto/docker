@@ -25,6 +25,7 @@ RUN set -ex; \
 		libxml2-dev \
 		libxslt-dev \
 		make \
+		mongodb-tools \
 		gcc \
 		g++ \
 		python \

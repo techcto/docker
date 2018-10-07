@@ -1,59 +1,56 @@
-echo "Install restore scripts"
-yum install -y wget
-wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
-rpm -Uvh epel-release-latest-6.noarch.rpm
-yum install -y duplicity duply python-boto mysql --enablerepo=epel
-curl -qL -o jq https://stedolan.github.io/jq/download/linux64/jq && chmod +x ./jq
-
 #Backup Script
-echo "Create mysql backup script"
-echo '#!/bin/bash' > /root/dumpmysql.sh
-echo "mkdir -p $MOUNT/clients/solodev/dbdumps" >> /root/dumpmysql.sh
-echo "PWD=$MOUNT/clients/solodev/dbdumps" >> /root/dumpmysql.sh
-echo 'DBFILE=$PWD/databases.txt' >> /root/dumpmysql.sh
-echo 'rm -f $DBFILE' >> /root/dumpmysql.sh
-echo "/usr/bin/mysql -u root -p$PASSWORD mysql -Ns -e \"show databases\" > \$DBFILE" >> /root/dumpmysql.sh
-echo "for i in \`cat \$DBFILE\` ; do mysqldump --opt --single-transaction -u root -p$PASSWORD \$i > \$PWD/\$i.sql ; done" >> /root/dumpmysql.sh
-echo "# Compress Backups" >> /root/dumpmysql.sh
-echo 'for i in `cat $DBFILE` ; do gzip -f $PWD/$i.sql ; done' >> /root/dumpmysql.sh
-chmod 700 /root/dumpmysql.sh
+if [ ! -f '/root/.duply/dumpmysql.sh' ] ; then
+    echo "Create mysql backup script"
+    echo '#!/bin/sh' > /root/.duply/dumpmysql.sh
+    echo "mkdir -p $MOUNT/dbdumps" >> /root/.duply/dumpmysql.sh
+    echo "PWD=$MOUNT/dbdumps" >> /root/.duply/dumpmysql.sh
+    echo 'DBFILE=$PWD/databases.txt' >> /root/.duply/dumpmysql.sh
+    echo 'rm -f $DBFILE' >> /root/.duply/dumpmysql.sh
+    echo "mysql -h $DB_HOST -u root -p$DB_PASSWORD mysql -Ns -e \"SELECT GROUP_CONCAT(SCHEMA_NAME SEPARATOR ' ') FROM information_schema.SCHEMATA WHERE SCHEMA_NAME NOT IN ('mysql','information_schema','performance_schema','sys');\" > \$DBFILE" >> /root/.duply/dumpmysql.sh
+    echo "for i in \`cat \$DBFILE\` ; do mysqldump --opt --single-transaction -h $DB_HOST -u root -p$DB_PASSWORD \$i > \$PWD/\$i.sql ; done" >> /root/.duply/dumpmysql.sh
+    echo "# Compress Backups" >> /root/.duply/dumpmysql.sh
+    echo 'for i in `cat $DBFILE` ; do gzip -f $PWD/$i.sql ; done' >> /root/.duply/dumpmysql.sh
+    chmod 700 /root/.duply/dumpmysql.sh
+fi
 
 #Duply Config
-echo "Init Duply backup config"
-duply backup create
-perl -pi -e 's/GPG_KEY/#GPG_KEY/g' /etc/duply/backup/conf
-perl -pi -e 's/GPG_PW/#GPG_PW/g' /etc/duply/backup/conf
-echo "GPG_PW=$PASSWORD" >> /etc/duply/backup/conf
-echo "TARGET='s3+http://BACKUP-BUCKET/backups'" >> /etc/duply/backup/conf
-echo "export AWS_ACCESS_KEY_ID='IAM_ACCESS_KEY'" >> /etc/duply/backup/conf
-echo "export AWS_SECRET_ACCESS_KEY='IAM_SECRET_KEY'" >> /etc/duply/backup/conf
-echo "SOURCE=$MOUNT" >> /etc/duply/backup/conf
-echo "MAX_AGE='1W'" >> /etc/duply/backup/conf
-echo "MAX_FULL_BACKUPS='2'" >> /etc/duply/backup/conf
-echo "MAX_FULLBKP_AGE=1W" >> /etc/duply/backup/conf
-echo "VOLSIZE=100" >> /etc/duply/backup/conf
-echo 'DUPL_PARAMS="$DUPL_PARAMS --volsize $VOLSIZE"' >> /etc/duply/backup/conf
-echo 'DUPL_PARAMS="$DUPL_PARAMS --full-if-older-than $MAX_FULLBKP_AGE"' >> /etc/duply/backup/conf
-echo "/root/dumpmysql.sh >/dev/null 2>&1" > /etc/duply/backup/pre
-echo "mongodump --out $MOUNT/mongodumps > /dev/null 2>&1" >> /etc/duply/backup/pre
+if [ ! -f '/root/.duply/backup/conf' ] ; then
+    echo "Init Duply backup config"
+    duply backup create
+    perl -pi -e 's/GPG_KEY/#GPG_KEY/g' /root/.duply/backup/conf
+    perl -pi -e 's/GPG_PW/#GPG_PW/g' /root/.duply/backup/conf
+    echo "GPG_PW=$GPG_PW" >> /root/.duply/backup/conf
+    echo "TARGET=s3+http://$BUCKET" >> /root/.duply/backup/conf
+    echo "export AWS_ACCESS_KEY_ID=$IAM_ACCESS_KEY" >> /root/.duply/backup/conf
+    echo "export AWS_SECRET_ACCESS_KEY=$IAM_SECRET_KEY" >> /root/.duply/backup/conf
+    echo "SOURCE=$MOUNT" >> /root/.duply/backup/conf
+    echo "MAX_AGE='1W'" >> /root/.duply/backup/conf
+    echo "MAX_FULL_BACKUPS='2'" >> /root/.duply/backup/conf
+    echo "MAX_FULLBKP_AGE=1W" >> /root/.duply/backup/conf
+    echo "VOLSIZE=100" >> /root/.duply/backup/conf
+    echo 'DUPL_PARAMS="$DUPL_PARAMS --volsize $VOLSIZE --allow-source-mismatch"' >> /root/.duply/backup/conf
+    echo 'DUPL_PARAMS="$DUPL_PARAMS --full-if-older-than $MAX_FULLBKP_AGE"' >> /root/.duply/backup/conf
+    echo "/root/.duply/dumpmysql.sh" > /root/.duply/backup/pre
+    echo "mongodump -u $DB_USER -p $DB_PASSWORD -d $MONGO_DB --host $MONGO_HOST --out $MOUNT/mongodumps" >> /root/.duply/backup/pre
 
-#Backup Script
-echo "/root/dumpmysql.sh" > /root/backup.sh
-echo "duply backup backup" >> /root/backup.sh
-chmod 700 /root/backup.sh
+    #Backup Script
+    echo "/root/.duply/dumpmysql.sh" > /root/.duply/backup.sh
+    echo "duply backup backup" >> /root/.duply/backup.sh
+    chmod 700 /root/.duply/backup.sh
+fi
 
 #Restore Script
-echo "Generate restore script"
-echo "#!/bin/bash" > /root/restore.sh
-echo "mv $MOUNT/Client_Settings.xml $MOUNT/Client_Settings.xml.bak" >> /root/restore.sh
-echo "export PASSPHRASE=$PASSWORD" >> /root/restore.sh
-echo "export AWS_ACCESS_KEY_ID='IAM_ACCESS_KEY'" >> /root/restore.sh
-echo "export AWS_SECRET_ACCESS_KEY='IAM_SECRET_KEY'" >> /root/restore.sh
-echo "duplicity --force -v8 restore s3+http://RESTORE-BUCKET/backups $MOUNT" >> /root/restore.sh
-echo "chmod -Rf 2770 $MOUNT" >> /root/restore.sh
-echo "chown -Rf apache.apache $MOUNT" >> /root/restore.sh
-echo "gunzip < $MOUNT/dbdumps/solodev.sql.gz | mysql -u root -p$PASSWORD solodev" >> /root/restore.sh
-echo "mongorestore $MOUNT/mongodumps" >> /root/restore.sh
-echo "rm -f $MOUNT/Client_Settings.xml" >> /root/restore.sh
-echo "mv $MOUNT/Client_Settings.xml.bak $MOUNT/Client_Settings.xml" >> /root/restore.sh
-chmod 700 /root/restore.sh
+if [ ! -f '/root/.duply/restore.sh' ] ; then
+    echo "Generate restore script"
+    echo "#!/bin/sh" > /root/.duply/restore.sh
+    echo "mv $MOUNT/Client_Settings.xml $MOUNT/Client_Settings.xml.bak" >> /root/.duply/restore.sh
+    echo "export PASSPHRASE=$DB_PASSWORD" >> /root/.duply/restore.sh
+    echo "export AWS_ACCESS_KEY_ID=$IAM_ACCESS_KEY" >> /root/.duply/restore.sh
+    echo "export AWS_SECRET_ACCESS_KEY=$IAM_SECRET_KEY" >> /root/.duply/restore.sh
+    echo "duplicity --force -v8 restore s3+http://$BUCKET $MOUNT" >> /root/.duply/restore.sh
+    echo "gunzip < $MOUNT/dbdumps/solodev.sql.gz | mysql -u root -p$DB_PASSWORD $DB_NAME" >> /root/.duply/restore.sh
+    echo "mongorestore --host $MONGO_HOST $MOUNT/mongodumps" >> /root/.duply/restore.sh
+    echo "rm -f $MOUNT/Client_Settings.xml" >> /root/.duply/restore.sh
+    echo "mv $MOUNT/Client_Settings.xml.bak $MOUNT/Client_Settings.xml" >> /root/.duply/restore.sh
+    chmod 700 /root/.duply/restore.sh
+fi

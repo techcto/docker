@@ -1,7 +1,11 @@
 #!/bin/bash
 
+/root/init.sh
+
 if [ "$PROCESS" == "restore" ]; then
-    /root/restore.sh
+    /root/.duply/restore.sh
 else
-    /root/backup.sh
+    /root/.duply/backup.sh
 fi
+
+#tail -f /dev/null
