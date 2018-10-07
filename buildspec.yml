@@ -10,8 +10,8 @@ phases:
       # - docker build --tag "techcto/python-codebuild:latest" .
       # - docker push "techcto/python-codebuild:latest"
       - cd ../duplicity
-      - docker build --tag "techcto/duplicity:latest" .
-      - docker push "techcto/duplicity:latest"
+      # - docker build --tag "techcto/duplicity:latest" .
+      # - docker push "techcto/duplicity:latest"
       - cd ../../mongo
       - docker build --tag "techcto/mongo:latest" .
       - docker push "techcto/mongo:latest"
