@@ -44,7 +44,7 @@ if [ ! -f '/root/.duply/restore.sh' ] ; then
     echo "Generate restore script"
     echo "#!/bin/sh" > /root/.duply/restore.sh
     echo "mv $MOUNT/Client_Settings.xml $MOUNT/Client_Settings.xml.bak" >> /root/.duply/restore.sh
-    echo "export PASSPHRASE=$DB_PASSWORD" >> /root/.duply/restore.sh
+    echo "export PASSPHRASE=$GPG_PW" >> /root/.duply/restore.sh
     echo "export AWS_ACCESS_KEY_ID=$IAM_ACCESS_KEY" >> /root/.duply/restore.sh
     echo "export AWS_SECRET_ACCESS_KEY=$IAM_SECRET_KEY" >> /root/.duply/restore.sh
     echo "duplicity --force -v8 restore s3+http://$RESTORE_BUCKET $MOUNT" >> /root/.duply/restore.sh
