@@ -8,4 +8,4 @@ else
     /root/.duply/backup.sh
 fi
 
-tail -f /dev/null
+#tail -f /dev/null
