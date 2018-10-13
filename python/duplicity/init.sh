@@ -48,7 +48,7 @@ if [ ! -f '/root/.duply/restore.sh' ] ; then
     echo "export AWS_ACCESS_KEY_ID=$IAM_ACCESS_KEY" >> /root/.duply/restore.sh
     echo "export AWS_SECRET_ACCESS_KEY=$IAM_SECRET_KEY" >> /root/.duply/restore.sh
     #TODO:  Create option to restore from point in time
-    echo "duplicity --force -v8 restore s3+http://$RESTORE_BUCKET/ $MOUNT" >> /root/.duply/restore.sh
+    echo "duplicity --force -v8 restore s3://s3.amazonaws.com/$RESTORE_BUCKET/ $MOUNT" >> /root/.duply/restore.sh
     echo "gunzip < $MOUNT/dbdumps/solodev.sql.gz | mysql -u root -p$DB_PASSWORD -h $DB_HOST $DB_NAME" >> /root/.duply/restore.sh
     echo "mongorestore --host $MONGO_HOST $MOUNT/mongodumps" >> /root/.duply/restore.sh
     echo "rm -f $MOUNT/Client_Settings.xml" >> /root/.duply/restore.sh
