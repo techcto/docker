@@ -1,6 +1,7 @@
 #Duply Config
 if [ ! -f '/root/.duply/backup/conf' ] ; then
     echo "Init Duply backup config"
+    #TODO: Replace Duply with pure duplicity commands
     duply backup create
     perl -pi -e 's/GPG_KEY/#GPG_KEY/g' /root/.duply/backup/conf
     perl -pi -e 's/GPG_PW/#GPG_PW/g' /root/.duply/backup/conf
@@ -17,7 +18,6 @@ if [ ! -f '/root/.duply/backup/conf' ] ; then
     echo 'DUPL_PARAMS="$DUPL_PARAMS --full-if-older-than $MAX_FULLBKP_AGE"' >> /root/.duply/backup/conf
     echo "/root/.duply/dumpmysql.sh" > /root/.duply/backup/pre
     echo "mongodump -u $DB_USER -p $DB_PASSWORD -d $MONGO_DB --host $MONGO_HOST --out $MOUNT/mongodumps" >> /root/.duply/backup/pre
-
     #Backup Script
     echo "/root/.duply/dumpmysql.sh" > /root/.duply/backup.sh
     echo "duply backup backup" >> /root/.duply/backup.sh
@@ -47,6 +47,7 @@ if [ ! -f '/root/.duply/restore.sh' ] ; then
     echo "export PASSPHRASE=$GPG_PW" >> /root/.duply/restore.sh
     echo "export AWS_ACCESS_KEY_ID=$IAM_ACCESS_KEY" >> /root/.duply/restore.sh
     echo "export AWS_SECRET_ACCESS_KEY=$IAM_SECRET_KEY" >> /root/.duply/restore.sh
+    #TODO:  Create option to restore from point in time
     echo "duplicity --force -v8 restore s3+http://$RESTORE_BUCKET/ $MOUNT" >> /root/.duply/restore.sh
     echo "gunzip < $MOUNT/dbdumps/solodev.sql.gz | mysql -u root -p$DB_PASSWORD -h $DB_HOST $DB_NAME" >> /root/.duply/restore.sh
     echo "mongorestore --host $MONGO_HOST $MOUNT/mongodumps" >> /root/.duply/restore.sh
