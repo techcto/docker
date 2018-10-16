@@ -39,10 +39,8 @@ RUN set -ex; \
         zip unzip wget curl cmake \
 	;
 
-RUN cd /root && wget http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && \
-	tar -xvzf ioncube_loaders_lin_x86-64.tar.gz && \
-	mkdir -p /usr/local/php/ext/ioncube && \
-	cp ioncube/ioncube_loader_lin_7.2.so /usr/local/php/ext/ioncube/;
+RUN cd /root && wget http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
+RUN	mkdir -p /usr/local/php/ext/ioncube && cp ioncube/ioncube_loader_lin_7.2.so /usr/local/php/ext/ioncube/;
 
 RUN apk add tidyhtml-dev
 RUN npm install --production --silent
