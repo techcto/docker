@@ -117,7 +117,6 @@ RUN sh composer.sh --install-dir=/usr/local/bin --filename=composer \
     && rm -rf composer.sh
 
 COPY ./php.ini /usr/local/etc/php/php.ini
-RUN echo "zend_extension=/usr/local/php/ext/ioncube/ioncube_loader_lin_7.2.so" >> /usr/local/etc/php/php.ini
 COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf
 
 #Remove useless config
