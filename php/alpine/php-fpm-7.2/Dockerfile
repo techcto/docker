@@ -39,6 +39,11 @@ RUN set -ex; \
         zip unzip wget curl cmake \
 	;
 
+RUN wget http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz /root/ && \
+	tar -xvzf /root/ioncube_loaders_lin_x86-64.tar.gz -C /root/ && \
+	mkdir -p /usr/local/php/ext/ioncube && \
+	cp /root/ioncube/ioncube_loader_lin_7.2.so /usr/local/php/ext/ioncube/. 
+
 RUN apk add tidyhtml-dev
 RUN npm install --production --silent
 RUN pecl install mcrypt-1.0.1;
@@ -112,6 +117,7 @@ RUN sh composer.sh --install-dir=/usr/local/bin --filename=composer \
     && rm -rf composer.sh
 
 COPY ./php.ini /usr/local/etc/php/php.ini
+RUN echo "zend_extension=/usr/local/php/ext/ioncube/ioncube_loader_lin_7.2.so" >> /usr/local/etc/php/php.ini
 COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf
 
 #Remove useless config
