@@ -78,8 +78,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
         apcu \
 		igbinary \
 		imagick \
-		memcached \
-		msgpack \
+		# memcached \
         mongodb \
         oauth \
 		redis \
@@ -88,7 +87,6 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-enable \
 		igbinary \
 		imagick \
-		msgpack \
         mongodb \
         oauth \
 		redis \
