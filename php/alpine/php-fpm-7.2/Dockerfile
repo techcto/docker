@@ -82,8 +82,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 		msgpack \
         mongodb \
         oauth \
-		redis \
-		xdebug \
+		redis 
 	; \
 	echo "\n" | pecl install ssh2-1.0; \
 	docker-php-ext-enable \
