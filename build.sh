@@ -2,8 +2,6 @@
 #- IE: ./build.sh php/alpine/php-fpm-7.2 techcto alpine-php-fpm-7.2
 TAG=$2/$3
 
-docker images $TAG
-
 docker build --tag $TAG $1/.
 
 #Method 1
@@ -16,6 +14,10 @@ docker build --tag $TAG $1/.
 #Method 2
 docker save $TAG | docker run  -v /tmp -i myyk/docker-squash -from root -t $TAG:latest | docker load
 
+echo "Before:"
+docker images $TAG
+
 docker push $TAG
 
+echo "After:"
 docker images $TAG
