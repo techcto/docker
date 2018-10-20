@@ -6,30 +6,21 @@ phases:
     commands:
       - echo "Login to DockerHub!"
       - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
-      - cd python/codebuild
+      # - cd python/codebuild
       # - docker build --tag "techcto/python-codebuild:latest" .
       # - docker push "techcto/python-codebuild:latest"
-      - cd ../duplicity
+      # - cd ../duplicity
       # - docker build --tag "techcto/duplicity:latest" .
       # - docker push "techcto/duplicity:latest"
-      - cd ../../mongo
+      # - cd ../../mongo
       # - docker build --tag "techcto/mongo:latest" .
       # - docker push "techcto/mongo:latest"
-      - cd ../php/alpine/php-fpm-7.2
-      - docker images $TAG
-      - TAG="techcto/alpine-php-fpm-7.2:latest"
-      - docker build --tag $TAG .
-      - mkdir input output
-      - docker save $TAG > input/alpine-php-fpm-7.2.tar
-      - docker run -v $(pwd)/input:/input -v $(pwd)/output:/output -v /tmp -i myyk/docker-squash -i input/alpine-php-fpm-7.2.tar -o output/alpine-php-fpm-7.2.tar
-      - cat output/alpine-php-fpm-7.2.tar | docker load
-      - ls -alh input/* && ls -alh output/*
-      - docker push $TAG
-      - docker images $TAG
-      - cd ../../aws/php-fpm-7.2
+      - chmod 700 build.sh
+      - ./build.sh php/alpine/php-fpm-7.2 techcto alpine-php-fpm-7.2
+      # - cd ../../aws/php-fpm-7.2
       # - docker build --tag "techcto/aws-php-fpm-7.2:latest" .
       # - docker push "techcto/aws-php-fpm-7.2:latest"
-      - cd ../php-fpm-5.6
+      # - cd ../php-fpm-5.6
       # - docker build --tag "techcto/aws-php-fpm-5.6:latest" .
       # - docker push "techcto/aws-php-fpm-5.6:latest"
   post_build:
