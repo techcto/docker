@@ -1,8 +1,8 @@
 
 #- IE: ./build.sh php/alpine/php-fpm-7.2 techcto alpine-php-fpm-7.2
-TAG=$2/$3
+IMAGE=$2/$3
 
-docker build --tag $TAG:latest $1/.
+docker build --tag $IMAGE:latest $1/.
 
 #Method 1
 # mkdir -p input output
@@ -12,12 +12,9 @@ docker build --tag $TAG:latest $1/.
 # ls -alh input/* && ls -alh output/*
 
 #Method 2
-docker save $TAG:latest | docker run  -v /tmp -i myyk/docker-squash -t $TAG -verbose | docker load
+docker save $IMAGE | docker run  -v /tmp -i myyk/docker-squash -t $IMAGE -verbose | docker load
 
-echo "Before:"
-docker images $TAG:latest
-
-docker push $TAG:latest
+docker push $IMAGE:latest
 
 echo "After:"
-docker images $TAG
+docker images $IMAGE
