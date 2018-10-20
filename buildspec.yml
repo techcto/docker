@@ -16,14 +16,13 @@ phases:
       # - docker build --tag "techcto/mongo:latest" .
       # - docker push "techcto/mongo:latest"
       - cd ../php/alpine/php-fpm-7.2
-      - TAG="techcto/docker-php-fpm-7.2:latest"
+      - TAG="techcto/alpine-php-fpm-7.2:latest"
       - docker build --tag $TAG .
       - mkdir input output
       - docker save $TAG > input/image.tar
       - docker run -v $(pwd)/input:/input -v $(pwd)/output:/output -v /tmp -i myyk/docker-squash -i input/image.tar -o output/squashed.tar
       - cat output/squashed.tar | docker load
       - docker images $TAG
-      - docker push $TAG
       - cd ../../aws/php-fpm-7.2
       # - docker build --tag "techcto/aws-php-fpm-7.2:latest" .
       # - docker push "techcto/aws-php-fpm-7.2:latest"

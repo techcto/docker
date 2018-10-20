@@ -57,7 +57,6 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 		gd \
 		gettext \
 		imap \
-		intl \
 		ldap \
 		mysqli \
 		opcache \
@@ -77,7 +76,6 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	pecl install \
         apcu \
 		imagick \
-		# memcached \
         mongodb \
         oauth \
 		redis \
