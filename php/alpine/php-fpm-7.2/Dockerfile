@@ -41,11 +41,9 @@ RUN set -ex; \
 	;
 
 RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
-RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_7.2.so /usr/local/php/ext/ioncube/;
+RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_7.2.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube ioncube_loaders_lin_x86-64.tar.gz;
 
-RUN npm install --production --silent
-RUN pecl install mcrypt-1.0.1;
-
+# RUN pecl install mcrypt-1.0.1;
 RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-install \
 		bcmath \	
@@ -76,6 +74,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
         apcu \
 		imagick \
         mongodb \
+		mcrypt \
         oauth \
 		redis \
 	; \
