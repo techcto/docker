@@ -12,7 +12,7 @@ docker build --tag $TAG:latest $1/.
 # ls -alh input/* && ls -alh output/*
 
 #Method 2
-docker save $TAG | docker run  -v /tmp -i myyk/docker-squash -t $TAG -verbose | docker load
+docker save $TAG | docker run  -v /tmp -i myyk/docker-squash -from root -t $TAG -verbose | docker load
 
 echo "Before:"
 docker images $TAG
