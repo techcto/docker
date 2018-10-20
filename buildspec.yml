@@ -16,12 +16,15 @@ phases:
       # - docker build --tag "techcto/mongo:latest" .
       # - docker push "techcto/mongo:latest"
       - cd ../php/alpine/php-fpm-7.2
+      - docker images $TAG
       - TAG="techcto/alpine-php-fpm-7.2:latest"
       - docker build --tag $TAG .
       - mkdir input output
-      - docker save $TAG > input/image.tar
-      - docker run -v $(pwd)/input:/input -v $(pwd)/output:/output -v /tmp -i myyk/docker-squash -i input/image.tar -o output/squashed.tar
-      - cat output/squashed.tar | docker load
+      - docker save $TAG > input/alpine-php-fpm-7.2.tar
+      - docker run -v $(pwd)/input:/input -v $(pwd)/output:/output -v /tmp -i myyk/docker-squash -i input/alpine-php-fpm-7.2.tar -o output/alpine-php-fpm-7.2.tar
+      - cat output/alpine-php-fpm-7.2.tar | docker load
+      - ls -alh input/* && ls -alh output/*
+      - docker push $TAG
       - docker images $TAG
       - cd ../../aws/php-fpm-7.2
       # - docker build --tag "techcto/aws-php-fpm-7.2:latest" .
