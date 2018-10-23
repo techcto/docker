@@ -41,16 +41,6 @@ fi
 
 #Restore Script
 if [ ! -f '/root/.duply/restore.sh' ] ; then
-    #This runs before restore
-    echo "Generate restore script"
-    echo "#!/bin/sh" > /root/.duply/initrestore.sh
-    echo "mv $MOUNT/Client_Settings.xml $MOUNT/Client_Settings.xml.bak" >> /root/.duply/initrestore.sh
-    echo "export PASSPHRASE=$GPG_PW" >> /root/.duply/initrestore.sh
-    echo "export AWS_ACCESS_KEY_ID=$IAM_ACCESS_KEY" >> /root/.duply/initrestore.sh
-    echo "export AWS_SECRET_ACCESS_KEY=$IAM_SECRET_KEY" >> /root/.duply/initrestore.sh
-    echo "BUCKET=$BUCKET" >> /root/.duply/initrestore.sh
-    echo "MOUNT=$MOUNT" >> /root/.duply/initrestore.sh
-    
     #This runs after restore
     echo "gunzip < $MOUNT/dbdumps/solodev.sql.gz | mysql -u root -p$DB_PASSWORD -h $DB_HOST $DB_NAME" > /root/.duply/restore.sh
     echo "mongorestore --host $MONGO_HOST $MOUNT/mongodumps" >> /root/.duply/restore.sh
