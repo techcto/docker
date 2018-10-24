@@ -43,7 +43,7 @@ fi
 if [ ! -f '/root/.duply/restore.sh' ] ; then
     #This runs after restore
     echo "gunzip < $MOUNT/dbdumps/solodev.sql.gz | mysql -u root -p$DB_PASSWORD -h $DB_HOST $DB_NAME" > /root/.duply/restore.sh
-    echo "mongorestore --host $MONGO_HOST $MOUNT/mongodumps" >> /root/.duply/restore.sh
+    echo "mongorestore -u $DB_USER -p $DB_PASSWORD --host $MONGO_HOST $MOUNT/mongodumps" >> /root/.duply/restore.sh
     echo "rm -f $MOUNT/Client_Settings.xml" >> /root/.duply/restore.sh
     echo "mv $MOUNT/Client_Settings.xml.bak $MOUNT/Client_Settings.xml" >> /root/.duply/restore.sh
     chmod 700 /root/.duply/*.sh
