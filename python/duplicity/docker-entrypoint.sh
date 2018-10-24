@@ -17,4 +17,6 @@ else
     /root/.duply/backup.sh
 fi
 
-tail -f /dev/null
+# tail -f /dev/null
+echo "$PROCESS finished"
+sleep 120
