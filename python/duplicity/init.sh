@@ -1,3 +1,18 @@
+#Mysql Dump Script
+if [ ! -f '/root/.duply/dumpmysql.sh' ] ; then
+    echo "Create mysql backup script"
+    echo '#!/bin/sh' > /root/.duply/dumpmysql.sh
+    echo "mkdir -p $MOUNT/dbdumps" >> /root/.duply/dumpmysql.sh
+    echo "PWD=$MOUNT/dbdumps" >> /root/.duply/dumpmysql.sh
+    echo 'DBFILE=$PWD/databases.txt' >> /root/.duply/dumpmysql.sh
+    echo 'rm -f $DBFILE' >> /root/.duply/dumpmysql.sh
+    echo "mysql -h $DB_HOST -u root -p$DB_PASSWORD mysql -Ns -e \"SELECT GROUP_CONCAT(SCHEMA_NAME SEPARATOR ' ') FROM information_schema.SCHEMATA WHERE SCHEMA_NAME NOT IN ('mysql','information_schema','performance_schema','sys');\" > \$DBFILE" >> /root/.duply/dumpmysql.sh
+    echo "for i in \`cat \$DBFILE\` ; do mysqldump --opt --single-transaction -h $DB_HOST -u root -p$DB_PASSWORD \$i > \$PWD/\$i.sql ; done" >> /root/.duply/dumpmysql.sh
+    echo "# Compress Backups" >> /root/.duply/dumpmysql.sh
+    echo 'for i in `cat $DBFILE` ; do gzip -f $PWD/$i.sql ; done' >> /root/.duply/dumpmysql.sh
+    chmod 700 /root/.duply/dumpmysql.sh
+fi
+
 #Duply Config
 if [ ! -f '/root/.duply/backup/conf' ] ; then
     echo "Init Duply backup config"
@@ -22,21 +37,6 @@ if [ ! -f '/root/.duply/backup/conf' ] ; then
     echo "/root/.duply/dumpmysql.sh" > /root/.duply/backup.sh
     echo "duply backup backup" >> /root/.duply/backup.sh
     chmod 700 /root/.duply/backup.sh
-fi
-
-#Backup Script
-if [ ! -f '/root/.duply/dumpmysql.sh' ] ; then
-    echo "Create mysql backup script"
-    echo '#!/bin/sh' > /root/.duply/dumpmysql.sh
-    echo "mkdir -p $MOUNT/dbdumps" >> /root/.duply/dumpmysql.sh
-    echo "PWD=$MOUNT/dbdumps" >> /root/.duply/dumpmysql.sh
-    echo 'DBFILE=$PWD/databases.txt' >> /root/.duply/dumpmysql.sh
-    echo 'rm -f $DBFILE' >> /root/.duply/dumpmysql.sh
-    echo "mysql -h $DB_HOST -u root -p$DB_PASSWORD mysql -Ns -e \"SELECT GROUP_CONCAT(SCHEMA_NAME SEPARATOR ' ') FROM information_schema.SCHEMATA WHERE SCHEMA_NAME NOT IN ('mysql','information_schema','performance_schema','sys');\" > \$DBFILE" >> /root/.duply/dumpmysql.sh
-    echo "for i in \`cat \$DBFILE\` ; do mysqldump --opt --single-transaction -h $DB_HOST -u root -p$DB_PASSWORD \$i > \$PWD/\$i.sql ; done" >> /root/.duply/dumpmysql.sh
-    echo "# Compress Backups" >> /root/.duply/dumpmysql.sh
-    echo 'for i in `cat $DBFILE` ; do gzip -f $PWD/$i.sql ; done' >> /root/.duply/dumpmysql.sh
-    chmod 700 /root/.duply/dumpmysql.sh
 fi
 
 #Restore Script
