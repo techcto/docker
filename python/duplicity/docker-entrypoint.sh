@@ -19,4 +19,4 @@ fi
 
 # tail -f /dev/null
 echo "$PROCESS finished"
-sleep 120
+sleep 60
