@@ -13,21 +13,15 @@ RUN set -ex; \
 		build-base \
 		bzip2-dev \
 		gettext-dev \
-		icu-dev \
 		imagemagick-dev \
 		imap-dev \
 		libjpeg-turbo-dev \
-		libmcrypt-dev \
-		libmemcached-dev \
 		libpng-dev \
 		libssh2-dev \
 		libtool \
 		libxml2-dev \
 		libxslt-dev \
-		make \
 		mongodb-tools \
-		gcc \
-		g++ \
 		python \
 		nodejs \
 		nodejs-npm \
@@ -38,7 +32,7 @@ RUN set -ex; \
 		pcre-dev \
 		tidyhtml-dev \
         zip unzip wget curl cmake \
-	;
+	; 
 
 RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
 RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_7.2.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
@@ -55,7 +49,6 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 		imap \
 		ldap \
 		mysqli \
-		opcache \
 		pdo_mysql \
 		shmop \
 		soap \
@@ -73,7 +66,6 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
         apcu \
 		imagick \
         mongodb \
-		mcrypt-1.0.1 \
         oauth \
 		redis \
 	; \
@@ -81,7 +73,6 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-enable \
 		imagick \
         mongodb \
-		mcrypt \
         oauth \
 		redis \
 		ssh2 \
