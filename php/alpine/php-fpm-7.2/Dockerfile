@@ -97,5 +97,14 @@ RUN sh composer.sh --install-dir=/usr/local/bin --filename=composer \
 COPY ./php.ini /usr/local/etc/php/php.ini
 COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf
 
+#NPM
+RUN mkdir -p "/var/www/node_modules_global" \
+    && mkdir -p "/var/www/.npm" \
+    && npm config set prefix "/var/www/node_modules_global" \
+    && npm install -g autoprefixer clean-css-cli npm-run-all postcss-cli postcss-discard-empty shx uglify-js \
+    && npm install -g --unsafe-perm node-sass \
+    && chown -Rf www-data.www-data "/var/www/node_modules_global" "/var/www/.npm" \
+    && chmod -Rf 2770 "/var/www/node_modules_global" "/var/www/.npm"
+
 #Remove useless config
 RUN rm -rf /etc/php7/php-fpm.d
