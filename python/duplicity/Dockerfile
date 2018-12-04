@@ -20,6 +20,7 @@ RUN apk upgrade --update && \
       mysql-client \
       mongodb-tools \
       perl \
+      zip \
       rsync \
       lftp \
       py-pip && \
