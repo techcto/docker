@@ -23,8 +23,7 @@ RUN set -ex; \
 		libxslt-dev \
 		mongodb-tools \
 		python \
-		nodejs \
-		nodejs-npm \
+		npm \
 		bash \
 		git \
 		sed \
