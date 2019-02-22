@@ -18,7 +18,7 @@ RUN set -ex; \
 	;
 
 #Configure Node
-RUN mkdir -p /var/www/.npm \
+RUN mkdir -p /var/www/.npm /var/www/.npm-global \
 	&& echo 'export NODE_PATH=/var/www/.npm-global/lib/node_modules' >> /var/www/.npmrc \
 	&& echo 'export PATH=$PATH:/var/www/.npm-global/bin' >> /var/www/.npmrc \
 	&& export PATH=/var/www/.npm-global/bin:$PATH \
