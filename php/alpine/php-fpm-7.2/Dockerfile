@@ -16,7 +16,7 @@ RUN set -ex; \
 		gettext-dev \
 		imagemagick-dev \
 		imagemagick-libs \
-		imap-dev \
+		imap \
 		libjpeg-turbo-dev \
 		libpng-dev \
 		libssh2-dev \
