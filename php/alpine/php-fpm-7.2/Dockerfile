@@ -21,6 +21,7 @@ RUN set -ex; \
 		libxml2 \
 		libxslt \
 		libbz2 \
+		libressl \
 		python \
 		npm \
 		g++ \
