@@ -14,6 +14,7 @@ RUN set -ex; \
 		build-base \
 		bzip2-dev \
 		gettext-dev \
+		imagemagick-dev \
 		imap \
 		libjpeg-turbo-dev \
 		libpng-dev \
@@ -74,7 +75,6 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	; \
 	echo "\n" | pecl install ssh2-1.0; \
 	docker-php-ext-enable \
-		imagick \
         mongodb \
         oauth \
 		redis \
