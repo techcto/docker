@@ -19,8 +19,7 @@ RUN set -ex; \
 		libpng-dev \
 		libssh2-dev \
 		libtool \
-		libxml2-dev \
-		libxslt-dev \
+		libxml2 \
 		mongodb-tools \
 		python \
 		npm \
