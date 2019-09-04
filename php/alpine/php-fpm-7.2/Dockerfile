@@ -106,8 +106,8 @@ COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf
 RUN mkdir -p "/var/www/node_modules_global" \
     && mkdir -p "/var/www/.npm" \
     && npm config set prefix "/var/www/node_modules_global" \
-    && npm install -g autoprefixer clean-css-cli npm-run-all postcss-cli postcss-discard-empty shx uglify-js nodemon\
-    && npm install -g --unsafe-perm node-sass \
+	&& npm install -g @fortawesome/fontawesome-free autoprefixer clean-css-cli gulp gulp-autoprefixer \
+		gulp-clean gulp-clean-css gulp-concat gulp-rename gulp-sass gulp-uglify node-sass \
     && chown -Rf www-data.www-data "/var/www/node_modules_global" "/var/www/.npm" \
     && chmod -Rf 2770 "/var/www/node_modules_global" "/var/www/.npm"
 
