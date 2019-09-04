@@ -1,12 +1,11 @@
 FROM php:7.2-fpm-alpine
-RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/community' >> /etc/apk/repositories
 RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 
 ENV MEMCACHE_VERSION 2.2.0
 ENV TIDY_VERSION=5.1.25
 RUN apk update
 
-RUN apk add --no-cache mongodb-tools
+RUN apk add --no-cache mongodb-tools libssl1.1 libcrypto1.1
 
 RUN set -ex; \
 	\
