@@ -6,6 +6,7 @@ ENV TIDY_VERSION=5.1.25
 RUN apk update
 
 RUN apk add mongodb-tools --repository=http://dl-cdn.alpinelinux.org/alpine/v3.9/community
+RUN apk add imagemagick-dev
 
 RUN set -ex; \
 	\
@@ -14,7 +15,6 @@ RUN set -ex; \
 		build-base \
 		bzip2-dev \
 		gettext-dev \
-		imagemagick-libs \
 		imap \
 		libjpeg-turbo-dev \
 		libpng-dev \
@@ -67,7 +67,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	; \
 	pecl install \
         apcu \
-		php7-pecl-imagick \
+		imagick \
         mongodb \
         oauth \
 		yaml \
@@ -75,7 +75,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	; \
 	echo "\n" | pecl install ssh2-1.0; \
 	docker-php-ext-enable \
-		php7-pecl-imagick \
+		imagick \
         mongodb \
         oauth \
 		redis \
