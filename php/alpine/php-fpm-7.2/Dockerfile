@@ -12,7 +12,6 @@ RUN set -ex; \
 	apk add --no-cache --virtual .build-deps \
 		autoconf \
 		build-base \
-		bzip2-dev \
 		gettext-dev \
 		imap \
 		libjpeg-turbo-dev \
