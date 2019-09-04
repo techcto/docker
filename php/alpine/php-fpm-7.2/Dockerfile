@@ -14,7 +14,6 @@ RUN set -ex; \
 		build-base \
 		bzip2-dev \
 		gettext-dev \
-		imagemagick-dev \
 		imap \
 		libjpeg-turbo-dev \
 		libpng-dev \
@@ -67,7 +66,6 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	; \
 	pecl install \
         apcu \
-		imagick \
         mongodb \
         oauth \
 		yaml \
