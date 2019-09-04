@@ -1,5 +1,5 @@
 FROM php:7.2-fpm-alpine
-
+RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/community' >> /etc/apk/repositories
 RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 
 ENV MEMCACHE_VERSION 2.2.0
