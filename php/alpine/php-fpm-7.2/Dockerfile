@@ -5,7 +5,7 @@ ENV MEMCACHE_VERSION 2.2.0
 ENV TIDY_VERSION=5.1.25
 RUN apk update
 
-RUN apk add mongodb-tools --repository=http://dl-cdn.alpinelinux.org/alpine/v3.9/community
+RUN apk add mongodb-tools openssl openldap-dev --repository=http://dl-cdn.alpinelinux.org/alpine/v3.9/community
 
 RUN set -ex; \
 	\
@@ -19,7 +19,6 @@ RUN set -ex; \
 		libtool \
 		libxml2 \
 		libxslt \
-		openssl \
 		libbz2 \
 		python \
 		npm \
@@ -31,7 +30,6 @@ RUN set -ex; \
 		sed \
 		yaml \
 		yaml-dev \
-		openldap-dev \
 		pcre-dev \
 		tidyhtml-dev \
         zip unzip wget curl cmake \
