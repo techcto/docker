@@ -5,7 +5,7 @@ ENV MEMCACHE_VERSION 2.2.0
 ENV TIDY_VERSION=5.1.25
 RUN apk update
 
-RUN apk add --no-cache mongodb-tools libssl1.1 libcrypto1.1
+RUN apk add mongodb-tools --repository=http://dl-cdn.alpinelinux.org/alpine/v3.9/community
 
 RUN set -ex; \
 	\
