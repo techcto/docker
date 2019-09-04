@@ -61,7 +61,6 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 		sysvshm \
 		tidy \
 		wddx \
-		xmlrpc \
 		zip \
 	; \
 	pecl install \
