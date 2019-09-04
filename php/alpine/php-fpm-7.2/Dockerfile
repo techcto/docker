@@ -6,6 +6,7 @@ ENV TIDY_VERSION=5.1.25
 RUN apk update
 
 RUN apk add mongodb-tools --repository=http://dl-cdn.alpinelinux.org/alpine/v3.9/community
+RUN apk add --update libressl2.7-libcrypto
 
 RUN set -ex; \
 	\
@@ -21,7 +22,6 @@ RUN set -ex; \
 		libxml2 \
 		libxslt \
 		libbz2 \
-		openssl \
 		python \
 		npm \
 		g++ \
