@@ -6,7 +6,6 @@ ENV TIDY_VERSION=5.1.25
 RUN apk update
 
 RUN apk add mongodb-tools --repository=http://dl-cdn.alpinelinux.org/alpine/v3.9/community
-RUN apk add imagemagick-dev
 
 RUN set -ex; \
 	\
