@@ -21,6 +21,7 @@ RUN set -ex; \
 		libtool \
 		libxml2 \
 		libxslt \
+		libbz2 \
 		python \
 		npm \
 		g++ \
