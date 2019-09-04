@@ -14,7 +14,6 @@ RUN set -ex; \
 		build-base \
 		bzip2-dev \
 		gettext-dev \
-		imagemagick-dev \
 		imagemagick-libs \
 		imap \
 		libjpeg-turbo-dev \
@@ -68,7 +67,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	; \
 	pecl install \
         apcu \
-		imagick \
+		php7-pecl-imagick \
         mongodb \
         oauth \
 		yaml \
@@ -76,7 +75,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	; \
 	echo "\n" | pecl install ssh2-1.0; \
 	docker-php-ext-enable \
-		imagick \
+		php7-pecl-imagick \
         mongodb \
         oauth \
 		redis \
