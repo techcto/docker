@@ -51,7 +51,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 		exif \
 		gd \
 		gettext \
-		imap-dev \
+		imap \
 		ldap \
 		mysqli \
 		pdo_mysql \
