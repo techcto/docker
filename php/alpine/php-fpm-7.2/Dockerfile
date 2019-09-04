@@ -6,6 +6,8 @@ ENV MEMCACHE_VERSION 2.2.0
 ENV TIDY_VERSION=5.1.25
 RUN apk update
 
+RUN apk add --no-cache mongodb-tools
+
 RUN set -ex; \
 	\
 	apk add --no-cache --virtual .build-deps \
@@ -20,7 +22,7 @@ RUN set -ex; \
 		libssh2-dev \
 		libtool \
 		libxml2 \
-		mongodb-tools \
+		libxslt \
 		python \
 		npm \
 		g++ \
@@ -61,6 +63,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 		sysvshm \
 		tidy \
 		wddx \
+		xsl \
 		zip \
 	; \
 	pecl install \

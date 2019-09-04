@@ -15,7 +15,7 @@ phases:
       # - ./build.sh python/codebuild techcto python-codebuild
       # - ./build.sh python/duplicity techcto duplicity
       # - ./build.sh redis techcto redis
-      - ./build.sh mongo techcto mongo
+      # - ./build.sh mongo techcto mongo
   post_build:
     commands:
       - echo "Docker image pushed on `date`"
