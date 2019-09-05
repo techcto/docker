@@ -119,5 +119,5 @@ RUN mkdir -p "/var/www/node_modules_global" \
     && chmod -Rf 2770 "/var/www/node_modules_global" "/var/www/.npm"
 
 #Remove useless config
-RUN apk del --no-network .build-deps
+# RUN apk del --no-network .build-deps
 RUN rm -rf /etc/php7/php-fpm.d
