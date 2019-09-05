@@ -1,13 +1,10 @@
 FROM php:7.2-fpm-alpine
-RUN echo "http://dl-4.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
-RUN echo "http://dl-4.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
 
 ENV MEMCACHE_VERSION 2.2.0
 ENV TIDY_VERSION=5.1.25
 RUN apk update
 
 RUN apk add mongodb-tools --repository=http://dl-cdn.alpinelinux.org/alpine/v3.9/community
-RUN apk add libc6-compat --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/v3.10/main
 
 RUN set -ex; \
 	\
@@ -44,6 +41,7 @@ RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_load
 RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_7.2.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
 
 RUN \
+	pecl config-set php_ini "${PHP_INI_DIR}/php.ini"; \
 	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-install \
 		bcmath \	
@@ -68,7 +66,6 @@ RUN \
 		xsl \
 		zip \
 	; \
-	pecl config-set php_ini /usr/local/etc/php/php.ini; \
 	pecl install \
         apcu \
         mongodb \
@@ -84,16 +81,14 @@ RUN \
 		ssh2 \
 		yaml \
 	; \
-	docker-php-source delete; \
 	runDeps="$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
 			| tr ',' '\n' \
 			| sort -u \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
 	)"; \
-	apk add --no-cache $runDeps; \
-	# update pecl channel definitions https://github.com/docker-library/php/issues/443
-	pecl update-channels; \
+	php -i | grep "additional .ini"; \
+	apk add $runDeps; \
 	rm -rf /tmp/pear ~/.pearrc; \
 	# smoke test
 	php --version
