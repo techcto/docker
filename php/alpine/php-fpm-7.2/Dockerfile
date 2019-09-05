@@ -40,6 +40,7 @@ RUN set -ex; \
 		libintl \
 		gettext \
 		c-client \
+		openjdk8 nss postfix rsyslog \
         zip unzip wget curl cmake \
 	;
 
