@@ -87,13 +87,15 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 		yaml \
 	; \
 	runDeps="$( \
-		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
-			| tr ',' '\n' \
+		scanelf --needed --nobanner --recursive \
+			/usr/local/lib/php/extensions \
+			| awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
 			| sort -u \
-			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+			| xargs -r apk info --installed \
+			| sort -u \
 	)"; \
-	php -i | grep "additional .ini"; \
 	apk add $runDeps; \
+	php -i | grep "additional .ini"; \
 	rm -rf /tmp/pear ~/.pearrc; \
 	php --version
 
