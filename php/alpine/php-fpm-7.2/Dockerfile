@@ -78,7 +78,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 		yaml \
 		redis \
 	; \
-	echo "\n" | pecl install ssh2-1.0; \
+	pecl install ssh2-1.0; \
 	docker-php-ext-enable \
         mongodb \
         oauth \
@@ -95,7 +95,6 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	php -i | grep "additional .ini"; \
 	apk add $runDeps; \
 	rm -rf /tmp/pear ~/.pearrc; \
-	# smoke test
 	php --version
 
 #Install Composer
