@@ -55,7 +55,6 @@ RUN docker-php-ext-install \
 		exif \
 		gd \
 		gettext \
-		imap \
 		ldap \
 		mysqli \
 		pdo_mysql \
@@ -69,6 +68,7 @@ RUN docker-php-ext-install \
 		wddx \
 		xsl \
 		zip \
+		imap \
 	; \
 	pecl install \
         apcu \
