@@ -47,9 +47,7 @@ RUN set -ex; \
 RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
 RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_7.2.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
 
-RUN \
-	pecl config-set php_ini "${PHP_INI_DIR}/php.ini"; \
-	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
+RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-install \
 		bcmath \	
 		bz2 \
@@ -119,5 +117,4 @@ RUN mkdir -p "/var/www/node_modules_global" \
     && chmod -Rf 2770 "/var/www/node_modules_global" "/var/www/.npm"
 
 #Remove useless config
-# RUN apk del --no-network .build-deps
 RUN rm -rf /etc/php7/php-fpm.d
