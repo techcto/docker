@@ -68,6 +68,7 @@ RUN \
 		xsl \
 		zip \
 	; \
+	pecl config-set php_ini /usr/local/etc/php/php.ini; \
 	pecl install \
         apcu \
         mongodb \
