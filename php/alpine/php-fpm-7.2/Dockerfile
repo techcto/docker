@@ -1,11 +1,12 @@
 FROM php:7.2-fpm-alpine
 RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+RUN echo "http://dl-4.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
 
 ENV MEMCACHE_VERSION 2.2.0
 ENV TIDY_VERSION=5.1.25
 RUN apk update
 
-RUN apk add mongodb-tools openssl-dev openldap-dev --repository=http://dl-cdn.alpinelinux.org/alpine/v3.9/community
+RUN apk add mongodb-tools --repository=http://dl-cdn.alpinelinux.org/alpine/v3.9/community
 
 RUN set -ex; \
 	\
@@ -13,13 +14,17 @@ RUN set -ex; \
 		autoconf \
 		build-base \
 		gettext-dev \
-		imap \
+		c-client \
 		libjpeg-turbo-dev \
 		libpng-dev \
 		libtool \
-		libxml2 \
-		libxslt \
+		libxml2-dev \
+		libxslt-dev \
+		libssh2-dev \
 		libbz2 \
+		bzip2-dev \
+		openssl-dev \
+		openldap-dev \
 		python \
 		npm \
 		g++ \
