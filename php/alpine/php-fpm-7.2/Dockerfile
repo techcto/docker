@@ -1,12 +1,13 @@
 FROM php:7.2-fpm-alpine
-RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 RUN echo "http://dl-4.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
+RUN echo "http://dl-4.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
 
 ENV MEMCACHE_VERSION 2.2.0
 ENV TIDY_VERSION=5.1.25
 RUN apk update
 
 RUN apk add mongodb-tools --repository=http://dl-cdn.alpinelinux.org/alpine/v3.9/community
+RUN apk add libc6-compat --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/v3.10/main
 
 RUN set -ex; \
 	\
@@ -14,16 +15,12 @@ RUN set -ex; \
 		autoconf \
 		build-base \
 		gettext-dev \
-		c-client \
 		libjpeg-turbo-dev \
 		libpng-dev \
 		libtool \
 		libxml2-dev \
 		libxslt-dev \
 		libssh2-dev \
-		libbz2 \
-		bzip2-dev \
-		openssl-dev \
 		openldap-dev \
 		python \
 		npm \
@@ -37,13 +34,17 @@ RUN set -ex; \
 		yaml-dev \
 		pcre-dev \
 		tidyhtml-dev \
+		libbz2 \
+		bzip2-dev \
+		c-client \
         zip unzip wget curl cmake \
-	; 
+	;
 
 RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
 RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_7.2.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
 
-RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
+RUN \
+	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 	docker-php-ext-install \
 		bcmath \	
 		bz2 \
@@ -74,7 +75,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 		yaml \
 		redis \
 	; \
-	echo "\n" | pecl install ssh2-1.1.2; \
+	echo "\n" | pecl install ssh2-1.0; \
 	docker-php-ext-enable \
         mongodb \
         oauth \
@@ -82,16 +83,19 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 		ssh2 \
 		yaml \
 	; \
+	docker-php-source delete; \
 	runDeps="$( \
-		scanelf --needed --nobanner --recursive \
-			/usr/local/lib/php/extensions \
-			| awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
+		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
+			| tr ',' '\n' \
 			| sort -u \
-			| xargs -r apk info --installed \
-			| sort -u \
+			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
 	)"; \
-	apk add --virtual $runDeps; \
-	rm -rf /tmp/pear/;
+	apk add --no-cache $runDeps; \
+	# update pecl channel definitions https://github.com/docker-library/php/issues/443
+	pecl update-channels; \
+	rm -rf /tmp/pear ~/.pearrc; \
+	# smoke test
+	php --version
 
 #Install Composer
 COPY ./composer.sh ./composer.sh
@@ -112,4 +116,5 @@ RUN mkdir -p "/var/www/node_modules_global" \
     && chmod -Rf 2770 "/var/www/node_modules_global" "/var/www/.npm"
 
 #Remove useless config
+RUN apk del --no-network .build-deps
 RUN rm -rf /etc/php7/php-fpm.d
