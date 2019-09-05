@@ -1,5 +1,8 @@
 FROM php:7.2-fpm-alpine
 
+RUN echo "http://dl-4.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
+RUN echo "http://dl-4.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+
 ENV MEMCACHE_VERSION 2.2.0
 ENV TIDY_VERSION=5.1.25
 RUN apk update
@@ -18,6 +21,7 @@ RUN set -ex; \
 		libxml2-dev \
 		libxslt-dev \
 		libssh2-dev \
+		libssh2 \
 		openldap-dev \
 		python \
 		npm \
@@ -33,6 +37,8 @@ RUN set -ex; \
 		tidyhtml-dev \
 		libbz2 \
 		bzip2-dev \
+		libintl \
+		gettext \
 		c-client \
         zip unzip wget curl cmake \
 	;
