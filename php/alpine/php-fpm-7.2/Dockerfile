@@ -22,6 +22,7 @@ RUN set -ex; \
 		libssh2-dev \
 		libssh2 \
 		openldap-dev \
+		imap-dev \
 		python \
 		npm \
 		g++ \
