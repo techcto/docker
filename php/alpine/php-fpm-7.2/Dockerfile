@@ -93,8 +93,7 @@ RUN docker-php-ext-install \
 			| xargs -r apk info --installed \
 			| sort -u \
 	)"; \
-	apk add --virtual $runDeps;
-	php -i | grep "additional .ini"; \
+	apk add --virtual $runDeps; \
 	rm -rf /tmp/pear ~/.pearrc; \
 	php --version
 
