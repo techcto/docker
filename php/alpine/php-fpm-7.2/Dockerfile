@@ -10,7 +10,6 @@ RUN apk update
 RUN apk add mongodb-tools --repository=http://dl-cdn.alpinelinux.org/alpine/v3.9/community
 
 RUN set -ex; \
-	\
 	apk add --no-cache --virtual .build-deps \
 		autoconf \
 		build-base \
@@ -47,8 +46,8 @@ RUN set -ex; \
 RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
 RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_7.2.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
 
-RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
-	docker-php-ext-install \
+RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr;
+RUN docker-php-ext-install \
 		bcmath \	
 		bz2 \
 		calendar \
@@ -94,7 +93,7 @@ RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
 			| xargs -r apk info --installed \
 			| sort -u \
 	)"; \
-	apk add $runDeps; \
+	apk add --virtual $runDeps;
 	php -i | grep "additional .ini"; \
 	rm -rf /tmp/pear ~/.pearrc; \
 	php --version
