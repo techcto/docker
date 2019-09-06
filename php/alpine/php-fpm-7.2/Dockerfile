@@ -22,7 +22,6 @@ RUN set -ex; \
 		libssh2-dev \
 		libssh2 \
 		openldap-dev \
-		imap-dev \
 		python \
 		npm \
 		g++ \
@@ -39,7 +38,6 @@ RUN set -ex; \
 		bzip2-dev \
 		libintl \
 		gettext \
-		c-client \
 		openjdk8 nss postfix rsyslog \
         zip unzip wget curl cmake \
 	;
@@ -69,7 +67,6 @@ RUN docker-php-ext-install \
 		wddx \
 		xsl \
 		zip \
-		imap \
 	; \
 	pecl install \
         apcu \
