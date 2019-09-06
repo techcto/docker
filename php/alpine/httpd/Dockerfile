@@ -22,8 +22,6 @@ RUN mkdir -p /var/www/.npm /var/www/.npm-global \
 	&& echo 'export NODE_PATH=/var/www/.npm-global/lib/node_modules' >> /var/www/.npmrc \
 	&& echo 'export PATH=$PATH:/var/www/.npm-global/bin' >> /var/www/.npmrc \
 	&& export PATH=/var/www/.npm-global/bin:$PATH \
-	&& npm install -g autoprefixer clean-css-cli nodemon npm-run-all postcss-cli postcss-discard-empty shx uglify-js \
-	&& npm install -g -f --unsafe-perm node-sass \
 	&& npm config set prefix '/var/www/.npm-global' \
 	&& chmod 2770 /var/www/.npmrc \
 	&& chmod -Rf 2770 /var/www/.npm \

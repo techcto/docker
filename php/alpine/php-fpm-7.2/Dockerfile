@@ -1,8 +1,5 @@
 FROM php:7.2-fpm-alpine
 
-RUN echo "http://dl-4.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
-RUN echo "http://dl-4.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
-
 ENV MEMCACHE_VERSION 2.2.0
 ENV TIDY_VERSION=5.1.25
 RUN apk update
@@ -24,9 +21,6 @@ RUN set -ex; \
 		openldap-dev \
 		python \
 		npm \
-		g++ \
-		make \
-		linux-headers \
 		bash \
 		git \
 		sed \
@@ -39,7 +33,7 @@ RUN set -ex; \
 		libintl \
 		gettext \
 		openjdk8 nss postfix rsyslog \
-        zip unzip wget curl cmake \
+        zip unzip wget curl \
 	;
 
 RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
@@ -74,6 +68,7 @@ RUN docker-php-ext-install \
         oauth \
 		yaml \
 		redis \
+		xdebug \
 	; \
 	pecl install ssh2-1.0; \
 	docker-php-ext-enable \
