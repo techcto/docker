@@ -20,6 +20,7 @@ RUN set -ex; \
 		libssh2 \
 		openldap-dev \
 		python \
+		python3 \
 		npm \
 		bash \
 		git \
@@ -34,7 +35,8 @@ RUN set -ex; \
 		gettext \
 		openjdk8 nss postfix rsyslog \
         zip unzip wget curl \
-	;
+	&& pip3 install --upgrade pip setuptools \
+	&& pip3 install awscli --upgrade --user;
 
 RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
 RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_7.2.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
