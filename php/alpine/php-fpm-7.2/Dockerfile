@@ -11,6 +11,7 @@ RUN set -ex; \
 		autoconf \
 		build-base \
 		gettext-dev \
+		freetype-dev \
 		libjpeg-turbo-dev \
 		libpng-dev \
 		libtool \
@@ -41,7 +42,7 @@ RUN set -ex; \
 RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
 RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_7.2.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
 
-RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr;
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-png-dir=/usr --with-jpeg-dir=/usr;
 RUN docker-php-ext-install \
 		bcmath \	
 		bz2 \
