@@ -1,4 +1,4 @@
-FROM php:7.2-fpm-alpine3.9
+FROM php:7.2-fpm-alpine3.11
 
 ENV MEMCACHE_VERSION 2.2.0
 ENV TIDY_VERSION=5.1.25
@@ -34,7 +34,7 @@ RUN set -ex; \
 		bzip2-dev \
 		libintl \
 		gettext \
-		openjdk8 nss postfix rsyslog \
+		nss postfix rsyslog \
         zip unzip wget curl \
 	&& pip3 install --upgrade pip setuptools \
 	&& pip3 install awscli --upgrade;
