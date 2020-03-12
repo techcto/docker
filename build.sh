@@ -4,17 +4,20 @@ IMAGE=$2/$3
 
 docker build --tag $IMAGE:latest $1/.
 
-#Method 1
-# mkdir -p input output
-# docker save $TAG > input/$3.tar
-# docker run -v $(pwd)/input:/input -v $(pwd)/output:/output -v /tmp -i myyk/docker-squash -i input/$3.tar -o output/$3.tar
-# cat output/$3.tar | docker load
-# ls -alh input/* && ls -alh output/*
+if [ -n "$4" ]; then
+  docker build --tag $IMAGE:$4 $1/.
+else
+  echo "No tag supplied"
+fi
 
-#Method 2
 docker save $IMAGE | docker run  -v /tmp -i myyk/docker-squash -t $IMAGE -verbose | docker load
 
 docker push $IMAGE:latest
+if [ -n "$4" ]; then
+  docker push $IMAGE:$4
+else
+  echo ""
+fi
 
 echo "After:"
 docker images $IMAGE
