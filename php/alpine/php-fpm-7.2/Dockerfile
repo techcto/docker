@@ -1,4 +1,4 @@
-FROM php:7.2-fpm-alpine3.12
+FROM php:7.2-fpm-alpine3.11
 
 ENV MEMCACHE_VERSION 2.2.0
 ENV TIDY_VERSION=5.1.25
