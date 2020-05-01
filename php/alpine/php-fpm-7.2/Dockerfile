@@ -5,6 +5,9 @@ ENV TIDY_VERSION=5.1.25
 RUN apk update
 
 RUN apk add mongodb-tools --repository=http://dl-cdn.alpinelinux.org/alpine/v3.9/community
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+	&& unzip awscliv2.zip \
+	&& ./aws/install
 
 RUN set -ex; \
 	apk add --no-cache --virtual .build-deps \
@@ -35,9 +38,7 @@ RUN set -ex; \
 		libintl \
 		gettext \
 		nss postfix rsyslog \
-        zip unzip wget curl \
-	&& pip3 install --upgrade pip setuptools \
-	&& pip3 install awscli --upgrade;
+        zip unzip wget curl ;
 
 RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
 RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_7.2.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
