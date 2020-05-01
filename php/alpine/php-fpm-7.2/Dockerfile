@@ -5,9 +5,6 @@ ENV TIDY_VERSION=5.1.25
 RUN apk update
 
 RUN apk add mongodb-tools --repository=http://dl-cdn.alpinelinux.org/alpine/v3.9/community
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
-	&& unzip awscliv2.zip \
-	&& ./aws/install
 
 RUN set -ex; \
 	apk add --no-cache --virtual .build-deps \
