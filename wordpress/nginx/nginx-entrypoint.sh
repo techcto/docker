@@ -2,8 +2,7 @@
 set -eo pipefail
 
 # Update App URL
-sed -i -e "s/{{APP_URL}}/${APP_URL}/g" /etc/nginx/conf.d/nginx.conf
-cat /etc/nginx/conf.d/nginx.conf
+sed -i -e "s/{{APP_URL}}/${APP_URL}/g" /etc/nginx/conf.d/default.conf
 
 if [ -z ${APP_ENV+x} ] && [ "$APP_ENV" != "dev" ]; then
     #Update Hosts file to resolve local solodev
@@ -12,5 +11,6 @@ if [ -z ${APP_ENV+x} ] && [ "$APP_ENV" != "dev" ]; then
 fi
 
 COMMAND=${COMMAND:="nginx"}
+echo ${COMMAND}
 
 ${COMMAND}
