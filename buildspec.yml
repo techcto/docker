@@ -8,7 +8,7 @@ phases:
       - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
       - chmod 700 build.sh
       # - ./build.sh python/codebuild techcto python-codebuild
-      - ./build.sh php/alpine/php-fpm-7.2 techcto alpine-php-fpm-7.2 1.2.2
+      # - ./build.sh php/alpine/php-fpm-7.2 techcto alpine-php-fpm-7.2 1.2.2
       # - ./build.sh php/alpine/httpd techcto httpd
       # - ./build.sh php/aws/php-fpm-7.2 techcto aws-php-fpm-7.2
       # - ./build.sh php/aws/php-fpm-5.6 techcto aws-php-fpm-5.6
@@ -16,6 +16,8 @@ phases:
       # - ./build.sh python/duplicity techcto duplicity
       # - ./build.sh redis techcto redis
       # - ./build.sh mongo techcto mongo
+      - ./build.sh wordpress solodev wordpress-5
+
   post_build:
     commands:
       - echo "Docker image pushed on `date`"
