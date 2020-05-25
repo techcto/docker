@@ -41,17 +41,9 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 RUN mkdir -p /var/lib/php/tmp \
     && mkdir -p ./tmp \
     && mkdir -p /var/lib/php/session \
-    $$ mkdir -p ${COMPOSER_CACHE_DIR} \
+    && mkdir -p ${COMPOSER_CACHE_DIR} \
     && chown -Rf www-data:www-data /var/lib/php/tmp ./tmp /var/lib/php/session ${COMPOSER_CACHE_DIR} \
     && chmod -Rf 770 /var/lib/php/tmp ./tmp /var/lib/php/session ${COMPOSER_CACHE_DIR}
-
-# COPY $SOURCE_DIR/composer.* ${APP_DIR}/
-# RUN if [ -f composer.json ] && [ ${APP_ENV} != "prod" ]; then \
-#     composer install --optimize-autoloader --no-dev ; fi
-# RUN if [ -f public/composer.json ] && [ ${APP_ENV} != "prod" ]; then \
-#     cd public \
-#     && composer install --optimize-autoloader --no-dev ; fi
-# RUN rm -rf ${COMPOSER_CACHE_DIR}/*
 
 COPY ./php.ini /usr/local/etc/php/php.ini
 COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf
