@@ -9,7 +9,7 @@ services:
   ui: 
     build: 
       context: .
-      dockerfile: ./Dockerfile.web
+      dockerfile: ./Dockerfile.ui
     environment: 
       APP_URL: '${APP_URL}'
       APP_ENV: '${APP_ENV}'
@@ -28,10 +28,14 @@ services:
     environment: 
       APP_ENV: '${APP_ENV}'
       APP_DEBUG: '${APP_DEBUG}'
-      DB_HOST: mysql
-      DB_USER: '${DB_USER}'
-      DB_PASSWORD: '${DB_PASSWORD}'
-      DB_NAME: '${DB_DATABASE}'
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: '${WORDPRESS_DB_USER}'
+      WORDPRESS_DB_PASSWORD: '${WORDPRESS_DB_PASSWORD}'
+      WORDPRESS_DB_NAME: '${WORDPRESS_DB_NAME}'
+      WORDPRESS_ADMIN_USER: '${WORDPRESS_ADMIN_USER}'
+      WORDPRESS_ADMIN_PASSWORD: '${WORDPRESS_ADMIN_PASSWORD}'
+      WORDPRESS_ADMIN_EMAIL: '${WORDPRESS_ADMIN_EMAIL}'
+      WORDPRESS_WEBSITE_URL: '${WORDPRESS_WEBSITE_URL}'
       APP_URL: '${APP_URL}'
     volumes:
       - client:/var/www/html
@@ -45,10 +49,10 @@ services:
     image: mariadb:10.3
     command: --sql_mode=""
     environment:
-      MYSQL_DATABASE: '${DB_DATABASE}'
-      MYSQL_PASSWORD: '${DB_PASSWORD}'
-      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-      MYSQL_USER: '${DB_USER}'
+      MYSQL_DATABASE: '${WORDPRESS_DB_NAME}'
+      MYSQL_PASSWORD: '${WORDPRESS_DB_PASSWORD}'
+      MYSQL_ROOT_PASSWORD: '${WORDPRESS_DB_PASSWORD}'
+      MYSQL_USER: '${WORDPRESS_DB_USER}'
     ports: 
       - '${DB_PORT}:3306'
     restart: always
