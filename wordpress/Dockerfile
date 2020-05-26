@@ -28,9 +28,9 @@ RUN set -ex
 
 ARG APP_ENV=dev
 ENV APP_ENV ${APP_ENV}
-ARG SOURCE_DIR=.
     
 #Install App
+COPY ./init.sh ${APP_DIR}/init.sh
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && php wp-cli.phar --info \
     && chmod +x wp-cli.phar \
@@ -49,7 +49,6 @@ COPY ./php.ini /usr/local/etc/php/php.ini
 COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf
 
 #Entrypoint
-COPY ./init.sh ./init.sh
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod a+rx /docker-entrypoint.sh
 

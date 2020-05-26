@@ -83,11 +83,6 @@ rm -rf $APP_DIR/var/cache/*
 #     enableExt xdebug
 # fi
 
-#Init Session
-echo "" >> /usr/local/etc/php/php.ini
-echo "session.save_handler = redis" >> /usr/local/etc/php/php.ini
-echo "session.save_path = \"tcp://${REDIS_HOST}\"" >> /usr/local/etc/php/php.ini
-
 ls -al
 # chmod -Rf 2770 ./init.sh && chown -Rf www-data:www-data ./init.sh && ls -al
 # ./init.sh &>/dev/stdout
