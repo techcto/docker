@@ -83,9 +83,8 @@ rm -rf $APP_DIR/var/cache/*
 #     enableExt xdebug
 # fi
 
-ls -al
-# chmod -Rf 2770 ./init.sh && chown -Rf www-data:www-data ./init.sh && ls -al
-# ./init.sh &>/dev/stdout
-# chmod 777 /dev/urandom
+chmod -Rf 2770 /root/init.sh && chown -Rf www-data:www-data /root/init.sh && ls -al
+/root/init.sh &>/dev/stdout
+chmod 777 /dev/urandom
 
 ${COMMAND}

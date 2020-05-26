@@ -30,7 +30,7 @@ ARG APP_ENV=dev
 ENV APP_ENV ${APP_ENV}
     
 #Install App
-COPY ./init.sh ${APP_DIR}/init.sh
+COPY ./init.sh /root/init.sh
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && php wp-cli.phar --info \
     && chmod +x wp-cli.phar \
