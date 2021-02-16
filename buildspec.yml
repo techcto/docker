@@ -13,8 +13,8 @@ phases:
       # - ./build.sh php/aws/php-fpm-7.2 techcto aws-php-fpm-7.2
       # - ./build.sh php/aws/php-fpm-5.6 techcto aws-php-fpm-5.6
       # - ./build.sh python/codebuild techcto python-codebuild
-      - ./build.sh python/duplicity techcto duplicity
-      - ./build.sh redis techcto redis
+      # - ./build.sh python/duplicity techcto duplicity
+      # - ./build.sh redis techcto redis
       # - ./build.sh mongo techcto mongoSS
       # - ./build.sh wordpress solodev wordpress
       # - ./build.sh wordpress/nginx solodev wordpress-proxy

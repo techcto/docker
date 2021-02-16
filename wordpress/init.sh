@@ -28,8 +28,10 @@ if ! $(wp core is-installed --allow-root); then
         --admin_user=${WORDPRESS_ADMIN_USER} \
         --admin_password=${WORDPRESS_ADMIN_PASSWORD} \
         --admin_email=${WORDPRESS_ADMIN_EMAIL}
+    wp config --allow-root set FS_METHOD direct
+    wp plugin install --allow-root ./plugins/sso.zip --activate
 else
-    wp option update siteurl ${WORDPRESS_WEBSITE_URL}
+    wp option update --allow-root siteurl ${WORDPRESS_WEBSITE_URL}
 fi
 
 echo "Finish Wordpress Init"
