@@ -83,7 +83,7 @@ rm -rf $APP_DIR/var/cache/*
 #     enableExt xdebug
 # fi
 
-chmod -Rf 2770 /root/init.sh && chown -Rf www-data:www-data /root/init.sh ./wp-content/uploads/* && chmod 755 ./wp-content/uploads/* && ls -al
+chmod -Rf 2770 /root/init.sh && chown -Rf www-data:www-data /root/init.sh ./* && chmod 755 ./wp-content/uploads/* && ls -al
 /root/init.sh &>/dev/stdout
 chmod 777 /dev/urandom
 

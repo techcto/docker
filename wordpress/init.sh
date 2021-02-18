@@ -34,4 +34,6 @@ else
     wp option update --allow-root siteurl ${WORDPRESS_WEBSITE_URL}
 fi
 
+chmod 755 ./* && chown -Rf www-data:www-data ./*
+
 echo "Finish Wordpress Init"
