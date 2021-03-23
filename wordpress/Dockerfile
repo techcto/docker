@@ -38,7 +38,7 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
     && wp --info
 
 #Install Plugins
-COPY ./plugins/sso.zip ./plugins/sso.zip
+COPY ./plugins/sso.zip ./tmp/sso.zip
 
 #Configure Tmp & Session
 RUN mkdir -p /var/lib/php/tmp \

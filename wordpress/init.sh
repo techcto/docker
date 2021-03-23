@@ -19,6 +19,7 @@ echo "DB Ready!"
 echo "Check Wordpress"
 if ! $(wp core is-installed --allow-root); then
     # rm -f wp-config-sample.php
+    rm -Rf ./wp-content/plugins/*
     echo "Install Wordpress"
     wp core download --allow-root
     wp core config --allow-root --dbhost=${WORDPRESS_DB_HOST} --dbname=${WORDPRESS_DB_NAME} --dbuser=${WORDPRESS_DB_USER} --dbpass=${WORDPRESS_DB_PASSWORD}
@@ -29,7 +30,8 @@ if ! $(wp core is-installed --allow-root); then
         --admin_password=${WORDPRESS_ADMIN_PASSWORD} \
         --admin_email=${WORDPRESS_ADMIN_EMAIL}
     wp config --allow-root set FS_METHOD direct
-    wp plugin install --allow-root ./plugins/sso.zip --activate
+    wp plugin install --allow-root ./tmp/sso.zip --activate
+    wp rewrite structure '/%postname%/' --allow-root
 else
     wp option update --allow-root siteurl ${WORDPRESS_WEBSITE_URL}
 fi

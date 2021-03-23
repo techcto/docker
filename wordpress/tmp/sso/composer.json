@@ -1,0 +1,26 @@
+{
+  "name": "solodev/wordpress",
+  "description": "Wordpress",
+  "version": "1",
+  "keywords": ["solodev", "wordpress", "docker", "sso"],
+  "type": "project",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Solodev",
+      "email": "info@solodev.com"
+    }
+  ],
+  "require": {
+    "lcobucci/jwt": "^3.4",
+    "league/oauth2-client": "^2.6"
+  },
+  "require-dev": {
+
+  },
+  "autoload": {
+    "psr-4": {
+      "WP\\SSO\\": "src"
+    }
+  }
+}

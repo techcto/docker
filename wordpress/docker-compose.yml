@@ -46,11 +46,14 @@ services:
       WORDPRESS_ADMIN_PASSWORD: '${WORDPRESS_ADMIN_PASSWORD}'
       WORDPRESS_ADMIN_EMAIL: '${WORDPRESS_ADMIN_EMAIL}'
       WORDPRESS_WEBSITE_URL: '${WORDPRESS_WEBSITE_URL}'
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
       APP_URL: '${APP_URL}'
     networks:
       - wordnet
     volumes:
       - client:/var/www/html
+      - ./tmp:/var/www/html/wp-content/plugins
     links:
       - mysql
     depends_on:
