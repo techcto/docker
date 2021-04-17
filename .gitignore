@@ -1,1 +1,2 @@
-wordpress/plugins/*
+# wordpress/plugins/*.zip
+tmp/*
