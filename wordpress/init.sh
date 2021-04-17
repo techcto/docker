@@ -17,7 +17,7 @@ echo "DB Ready!"
 
 # Install Wordpress
 echo "Check Wordpress"
-if ! $(wp core is-installed --allow-root); then
+if ! wp core is-installed --allow-root; then
     # rm -f wp-config-sample.php
     rm -Rf ./wp-content/plugins/*
     echo "Install Wordpress"
