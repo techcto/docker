@@ -60,14 +60,21 @@ class WPSSOPlugin {
 				\GuzzleHttp\RequestOptions::ALLOW_REDIRECTS => true],
 			 \GuzzleHttp\RequestOptions::VERIFY => false,
 		]);
-		$this->provider = new GenericProvider([
-			'clientId'                => ''.getenv('CLIENT_ID').'',    // The client ID assigned to you by the provider
-			'clientSecret'            => ''.getenv('CLIENT_SECRET').'',    // The client password assigned to you by the provider
-			'redirectUri'             => 'http://'.$_SERVER['SERVER_NAME'].'/wp-json/wp_SSO/login',
+
+		$envDir = realpath(__DIR__ . '/../../..');
+		$dotenv = \Dotenv\Dotenv::createImmutable($envDir);
+		$dotenv->safeLoad();
+
+		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+		$options = [
+			'clientId'                => ''.$_ENV['SSO_CLIENT_ID'].'',    // The client ID assigned to you by the provider
+			'clientSecret'            => ''.$_ENV['SSO_CLIENT_SECRET'].'',    // The client password assigned to you by the provider
+			'redirectUri'             => $protocol.$_SERVER['HTTP_HOST'].'/wp-json/wp_SSO/login',
 			'urlAuthorize'            => 'https://id.solodev.com/oauth2/authorize',
 			'urlAccessToken'          => 'https://id.solodev.com/oauth2/access_token',
-			'urlResourceOwnerDetails' => ''
-		]);
+			'urlResourceOwnerDetails' => '',
+		];
+		$this->provider = new GenericProvider($options);
 		$this->provider->setHttpClient($guzzyClient);
 	}
 
@@ -179,29 +186,45 @@ class WPSSOPlugin {
 				Logger::log( Logger::NO_REFERAL_ID_ERROR, "The $state_header http header is empty" );
 			}
 
+			// if ( ! $this->validate_client_id( $client_id ) ) {
+			// 	throw new InvalidInstallNameException( 'Received: ' . $client_id );
+			// }
+
 			//New
+			$is_valid = false;
+
 			if ($code) {
+				
 				$accessToken = $this->provider->getAccessToken('authorization_code', [
-					'code' => $code,
+					'code' => $code
 				]);
 				$token = $this->handleAccessToken($accessToken);
+				$idToken = $this->extractIdToken($accessToken);
+
+				$user_email = $idToken->getClaim("email");
+				$first_name = $idToken->getClaim("given_name");
+				$last_name = $idToken->getClaim("family_name");
+
+				$assoc_args = [
+					"user-email" => $user_email,
+					"first-name" => $first_name,
+					"last-name" => $last_name,
+					"client-id" => $client_id,
+					"user-role" => "editor"
+				];
+				$result = $this->wp_sso($assoc_args);
+				$user = $result['user'];
+
+				$nonce = $result['nonce'];
+				$nonce_data = $this->user_nonce_helper->get_nonce_data( $user->ID );
+
+				if ( empty( $nonce_data ) ) {
+					throw new NonceMetaDataValidationException( "Empty nonce data retrieved for User ({$user_email}) during login." );
+				}
+
+				$is_valid = $this->user_nonce_helper->validate_nonce( $user->ID, $nonce, $nonce_data, $client_id );
 			}
-			var_dump($token);die();
 			
-			//End
-
-			if ( ! $this->validate_client_id( $client_id ) ) {
-				throw new InvalidInstallNameException( 'Received: ' . $client_id );
-			}
-
-			$user       = $this->sign_on_user_provider->get_wp_user( $user_email );
-			$nonce_data = $this->user_nonce_helper->get_nonce_data( $user->ID );
-
-			if ( empty( $nonce_data ) ) {
-				throw new NonceMetaDataValidationException( "Empty nonce data retrieved for User ({$user_email}) during login." );
-			}
-
-			$is_valid = $this->user_nonce_helper->validate_nonce( $user->ID, $nonce, $nonce_data, $client_id );
 			if ( $is_valid ) {
 				$this->sign_on_user_provider->login_user( $user, $time_start, $state );
 				$redirect_url = self::REDIRECT_URL_ON_SUCCESS;
@@ -359,7 +382,7 @@ class WPSSOPlugin {
 
 		$data = array(
 			'nonce'        => $nonce ?? '',
-			'user_email'   => $user->data->user_email ?? '',
+			'user'		   => $user,
 			'redirect_url' => $redirect_url,
 			'query_params' => $query_params ?? new \stdClass(),
 		);
@@ -411,6 +434,7 @@ class WPSSOPlugin {
 			'initiate'             => true,
 			'response_type'		   => 'code',
 			'approval_prompt'	   => 'auto',
+			'scope'            	   => ['openid', 'profile:read', 'email:read', 'picture:read'],
 			self::STATE_ARG => $state,
 		);
 		return $params;
@@ -429,6 +453,18 @@ class WPSSOPlugin {
             throw new RuntimeException('Invalid token');
         }
 
-		return $sub;
+		return $token;
+    }
+
+	/**
+     * @param AccessTokenInterface $token
+     * @throws BadMethodCallException
+     */
+    private function extractIdToken(AccessTokenInterface $token)
+    {
+		$tokenValues = $token->getValues();
+        $idToken = (new JWT\Parser())->parse($tokenValues['id_token']);
+
+		return $idToken;
     }
 }

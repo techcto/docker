@@ -13,10 +13,8 @@
   ],
   "require": {
     "lcobucci/jwt": "^3.4",
-    "league/oauth2-client": "^2.6"
-  },
-  "require-dev": {
-
+    "league/oauth2-client": "^2.6",
+    "vlucas/phpdotenv": "^5.3"
   },
   "autoload": {
     "psr-4": {
