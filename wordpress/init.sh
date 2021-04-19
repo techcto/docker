@@ -15,6 +15,33 @@ postfix start
 /usr/local/bin/wait-for-it.sh ${WORDPRESS_DB_HOST}:3306 -t 200
 echo "DB Ready!"
 
+#Install App
+install() {
+    #Set config from environment variables
+    CONFIG="${APP_DIR}/.env"
+    if [ ! -f $CONFIG ] ; then
+        if [ ! -z "$CLIENT_ID" ] ; then
+            echo "SSO_CLIENT_ID=${CLIENT_ID}" >> $CONFIG
+            echo "SSO_CLIENT_SECRET=${CLIENT_SECRET}" >> $CONFIG
+            echo "SSO_REDIRECT_URI=http://localhost/login/id" >> $CONFIG
+            echo "SSO_URL_AUTHORIZE=https://id.solodev.com/oauth2/authorize" >> $CONFIG
+            echo "SSO_URL_ACCESS_TOKEN=https://id.solodev.com/oauth2/access_token" >> $CONFIG
+            echo "SSO_URL_KEY_SET=https://portal.solodev.com/.well-known/jwks.json" >> $CONFIG
+        fi
+    fi
+
+    echo "Install Complete"
+}
+
+#Update App
+update() {
+    echo "Update Complete"
+}
+
+echo "Start App Init"
+
+echo "Finish App Init"
+
 # Install Wordpress
 echo "Check Wordpress"
 if ! wp core is-installed --allow-root; then
@@ -32,8 +59,10 @@ if ! wp core is-installed --allow-root; then
     wp config --allow-root set FS_METHOD direct
     wp plugin install --allow-root ./tmp/sso.zip --activate
     wp rewrite structure '/%postname%/' --allow-root
+    install
 else
     wp option update --allow-root siteurl ${WORDPRESS_WEBSITE_URL}
+    update
 fi
 
 chmod 755 ./* && chown -Rf www-data:www-data ./*
