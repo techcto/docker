@@ -37,9 +37,6 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
     && mv wp-cli.phar /usr/local/bin/wp \
     && wp --info
 
-#Install Plugins
-COPY ./plugins/sso.zip ./tmp/sso.zip
-
 #Configure Tmp & Session
 RUN mkdir -p /var/lib/php/tmp \
     && mkdir -p ./tmp \
@@ -47,6 +44,9 @@ RUN mkdir -p /var/lib/php/tmp \
     && mkdir -p ${COMPOSER_CACHE_DIR} \
     && chown -Rf www-data:www-data /var/lib/php/tmp ./tmp /var/lib/php/session ${COMPOSER_CACHE_DIR} \
     && chmod -Rf 770 /var/lib/php/tmp ./tmp /var/lib/php/session ${COMPOSER_CACHE_DIR}
+
+#Install Plugins
+COPY ./plugins/sso.zip ./tmp/sso.zip
 
 COPY ./php.ini /usr/local/etc/php/php.ini
 COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf
