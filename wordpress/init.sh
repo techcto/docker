@@ -1,4 +1,7 @@
 #!/bin/sh
+echo "Start Init Script"
+echo $(ls)
+
 set -eo pipefail
 
 #Mail
@@ -20,6 +23,7 @@ install() {
     #Set config from environment variables
     CONFIG="${APP_DIR}/.env"
     if [ ! -f $CONFIG ] ; then
+        echo "" >> $CONFIG
         if [ ! -z "$CLIENT_ID" ] ; then
             echo "SSO_CLIENT_ID=${CLIENT_ID}" >> $CONFIG
             echo "SSO_CLIENT_SECRET=${CLIENT_SECRET}" >> $CONFIG
@@ -38,15 +42,12 @@ update() {
     echo "Update Complete"
 }
 
-echo $(ls)
 echo "Start App Init"
-echo $PWD
 echo "Finish App Init"
-echo $(wp core is-installed --path='/var/www/html' --allow-root)
 
 # Install Wordpress
 echo "Check Wordpress"
-if ! $(wp core is-installed --path='/var/www/html' --allow-root); then
+if [ ! -f "${APP_DIR}/.env" ]; then
     # rm -f wp-config-sample.php
     install
     rm -Rf ./wp-content/plugins/*

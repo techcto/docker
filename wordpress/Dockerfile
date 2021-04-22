@@ -42,8 +42,8 @@ RUN mkdir -p /var/lib/php/tmp \
     && mkdir -p /var/www/html/tmp \
     && mkdir -p /var/lib/php/session \
     && mkdir -p ${COMPOSER_CACHE_DIR} \
-    && chown -Rf www-data:www-data /var/lib/php/tmp ./tmp /var/lib/php/session ${COMPOSER_CACHE_DIR} \
-    && chmod -Rf 770 /var/lib/php/tmp ./tmp /var/lib/php/session ${COMPOSER_CACHE_DIR}
+    && chown -Rf www-data:www-data /var/lib/php/tmp /var/www/html/tmp /var/lib/php/session ${COMPOSER_CACHE_DIR} \
+    && chmod -Rf 770 /var/lib/php/tmp /var/www/html/tmp /var/lib/php/session ${COMPOSER_CACHE_DIR}
 
 #Install Plugins
 COPY ./plugins/sso.zip /var/www/html/tmp/sso.zip

@@ -3,6 +3,7 @@ set -eo pipefail
 
 echo "Booting up Wordpress"
 
+echo "$APP_DIR"
 cd "$APP_DIR"
 
 export DOCKER_BRIDGE_IP=$(/sbin/ip route|awk '/default/ { print $3 }')
