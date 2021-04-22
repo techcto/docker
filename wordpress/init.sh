@@ -38,14 +38,17 @@ update() {
     echo "Update Complete"
 }
 
+echo $(ls)
 echo "Start App Init"
-
+echo $PWD
 echo "Finish App Init"
+echo $(wp core is-installed --path='/var/www/html' --allow-root)
 
 # Install Wordpress
 echo "Check Wordpress"
-if ! wp core is-installed --allow-root; then
+if ! $(wp core is-installed --path='/var/www/html' --allow-root); then
     # rm -f wp-config-sample.php
+    install
     rm -Rf ./wp-content/plugins/*
     echo "Install Wordpress"
     wp core download --allow-root
@@ -59,7 +62,6 @@ if ! wp core is-installed --allow-root; then
     wp config --allow-root set FS_METHOD direct
     wp plugin install --allow-root ./tmp/sso.zip --activate
     wp rewrite structure '/%postname%/' --allow-root
-    install
 else
     wp option update --allow-root siteurl ${WORDPRESS_WEBSITE_URL}
     update
