@@ -58,7 +58,7 @@ if [ ! -f "${APP_DIR}/.env" ]; then
         --admin_password=${WORDPRESS_ADMIN_PASSWORD} \
         --admin_email=${WORDPRESS_ADMIN_EMAIL}
     wp config --allow-root set FS_METHOD direct
-    wp plugin install --allow-root ./tmp/sso.zip --activate
+    wp plugin install --allow-root /var/www/tmp/sso.zip --activate
     wp rewrite structure '/%postname%/' --allow-root
 else
     wp option update --allow-root siteurl ${WORDPRESS_WEBSITE_URL}
