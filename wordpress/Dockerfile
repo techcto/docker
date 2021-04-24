@@ -15,7 +15,7 @@ RUN /bin/dd if=/dev/zero of=/mnt/swapfile bs=1M count=2048 \
     && /sbin/swapon -a
 
 #Set Environment
-ENV APP_DIR=/var/www/html \
+ENV APP_DIR=. \
     COMPOSER_CACHE_DIR=/var/cache/composer \
     COMPOSER_ALLOW_SUPERUSER=1 \
     RESOLVE_LOGGING=false
@@ -39,14 +39,14 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 
 #Configure Tmp & Session
 RUN mkdir -p /var/lib/php/tmp \
-    && mkdir -p /var/www/html/tmp \
+    && mkdir -p ./tmp \
     && mkdir -p /var/lib/php/session \
     && mkdir -p ${COMPOSER_CACHE_DIR} \
-    && chown -Rf www-data:www-data /var/lib/php/tmp /var/www/html/tmp /var/lib/php/session ${COMPOSER_CACHE_DIR} \
-    && chmod -Rf 770 /var/lib/php/tmp /var/www/html/tmp /var/lib/php/session ${COMPOSER_CACHE_DIR}
+    && chown -Rf www-data:www-data /var/lib/php/tmp ./tmp /var/lib/php/session ${COMPOSER_CACHE_DIR} \
+    && chmod -Rf 770 /var/lib/php/tmp ./tmp /var/lib/php/session ${COMPOSER_CACHE_DIR}
 
 #Install Plugins
-COPY ./plugins/sso.zip /var/www/html/tmp/sso.zip
+COPY ./plugins/sso.zip ./tmp/sso.zip
 
 COPY ./php.ini /usr/local/etc/php/php.ini
 COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf

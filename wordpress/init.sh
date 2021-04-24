@@ -1,7 +1,4 @@
 #!/bin/sh
-echo "Start Init Script"
-echo $(ls)
-
 set -eo pipefail
 
 #Mail
@@ -42,15 +39,15 @@ update() {
     echo "Update Complete"
 }
 
-echo "Start App Init"
-echo "Finish App Init"
+echo "Start Wordpress Init"
 
 # Install Wordpress
 echo "Check Wordpress"
 if [ ! -f "${APP_DIR}/.env" ]; then
-    # rm -f wp-config-sample.php
     install
     rm -Rf ./wp-content/plugins/*
+    echo "Check dir"
+    ls -al
     echo "Install Wordpress"
     wp core download --allow-root
     wp core config --allow-root --dbhost=${WORDPRESS_DB_HOST} --dbname=${WORDPRESS_DB_NAME} --dbuser=${WORDPRESS_DB_USER} --dbpass=${WORDPRESS_DB_PASSWORD}
