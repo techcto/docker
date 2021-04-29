@@ -47,8 +47,12 @@ class WPSSOPlugin {
 	private $login_params = array( 'redirect_uri' => '/' . BASE_URL . '/login' );
 	private $sign_on_user_provider;
 	private $user_state_helper;
-
 	private $user_nonce_helper;
+
+	/**
+     * @var GenericProvider
+     */
+	private $provider;
 
 	public function __construct( $sign_on_user_provider, $user_nonce_helper, $user_state_helper ) {
 		$this->sign_on_user_provider  = $sign_on_user_provider;
@@ -73,9 +77,45 @@ class WPSSOPlugin {
 			'urlAuthorize'            => 'https://id.solodev.com/oauth2/authorize',
 			'urlAccessToken'          => 'https://id.solodev.com/oauth2/access_token',
 			'urlResourceOwnerDetails' => '',
+			'scopes'            	  => ['openid', 'profile:read', 'email:read', 'picture:read'],
+			'scopeSeparator'          => ' ',
 		];
 		$this->provider = new GenericProvider($options);
 		$this->provider->setHttpClient($guzzyClient);
+	}
+
+	public function add_login_form_functionality() {
+	
+		//Get and set any values already sent
+		$redirect_url = $this->provider->getAuthorizationUrl();
+
+		if ($_ENV['SSO_CLIENT_ID']) {
+			wp_redirect( $redirect_url );
+			exit;
+		}
+
+		//Add SSO button to login form if desired
+		$sso_button_html = "
+		<script>
+			document.addEventListener('DOMContentLoaded', function(){
+				var ssoButton = document.createElement('div');
+				ssoButton.classList.add('sso-button-container');
+				ssoButton.innerHTML = \"<hr/><p><a href='$redirect_url' class='button button-primary button-large'>Click Here to Login Via SSO</a>\";
+				document.querySelector('#loginform').appendChild(ssoButton);
+			});
+		</script>
+		<style>
+			.sso-button-container{
+				padding-top:15px;
+				clear:both;
+			}
+			.sso-button-container hr{
+				margin-bottom:15px;
+			}
+		</style>
+		";
+
+		echo $sso_button_html;
 	}
 
 	public static function initialize( $sign_on_user_provider = null, $user_nonce_helper = null, $user_state_helper = null ) {
@@ -117,6 +157,8 @@ class WPSSOPlugin {
 				);
 			}
 		);
+
+		add_action( 'login_form', array(self::$instance, 'add_login_form_functionality') );
 
 		if ( defined( 'WP_CLI' ) && \WP_CLI ) {
 			\WP_CLI::add_command( self::WP_CLI_COMMAND_NAME, self::$instance );
@@ -198,6 +240,7 @@ class WPSSOPlugin {
 				$accessToken = $this->provider->getAccessToken('authorization_code', [
 					'code' => $code
 				]);
+
 				$token = $this->handleAccessToken($accessToken);
 				$idToken = $this->extractIdToken($accessToken);
 
@@ -210,7 +253,8 @@ class WPSSOPlugin {
 					"first-name" => $first_name,
 					"last-name" => $last_name,
 					"client-id" => $client_id,
-					"user-role" => "editor"
+					"user-role" => "editor",
+					#"user-role" => "administrator"
 				];
 				$result = $this->wp_sso($assoc_args);
 				$user = $result['user'];
@@ -224,7 +268,7 @@ class WPSSOPlugin {
 
 				$is_valid = $this->user_nonce_helper->validate_nonce( $user->ID, $nonce, $nonce_data, $client_id );
 			}
-			
+
 			if ( $is_valid ) {
 				$this->sign_on_user_provider->login_user( $user, $time_start, $state );
 				$redirect_url = self::REDIRECT_URL_ON_SUCCESS;
@@ -270,11 +314,8 @@ class WPSSOPlugin {
 				Logger::log( Logger::USER_LOGGED_IN, "User $user_email already logged in.", $user_email );
 				$redirect_url = self::REDIRECT_URL_ON_SUCCESS;
 			} else {
-				if ( null === $referer ) {
-					throw new NoRefererException( 'No referer provided for user logged in check' );
-				}
 				Logger::log( Logger::USER_NOT_LOGGED_IN, 'User ' . $user_email . ' not logged in. Beginning flow.', $user_email );
-				$redirect_url = $referer . '?' . http_build_query( $this->create_is_logged_in_response_params( $client_id, $state, $redirect_uri ) );
+				$redirect_url = $this->provider->getAuthorizationUrl();
 			}
 		} catch ( InvalidInstallNameException $e ) {
 			Logger::log( Logger::INSTALL_NAME_ERROR, $e->getMessage(), $user_email );
