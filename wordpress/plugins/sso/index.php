@@ -70,10 +70,15 @@ class WPSSOPlugin {
 		$dotenv->safeLoad();
 
 		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+		$redirect_uri = $protocol.$_SERVER['HTTP_HOST'].'/wp-json/wp_SSO/login';
+		if (strpos($_SERVER['HTTP_HOST'],'solodev1.com')) {
+			$deploymentName = array_shift(explode('.', $_SERVER['HTTP_HOST']));
+			$redirect_uri = $protocol.$deploymentName.'.solodev.net/wp-json/wp_SSO/login';
+		}
 		$options = [
 			'clientId'                => ''.$_ENV['SSO_CLIENT_ID'].'',    // The client ID assigned to you by the provider
 			'clientSecret'            => ''.$_ENV['SSO_CLIENT_SECRET'].'',    // The client password assigned to you by the provider
-			'redirectUri'             => $protocol.$_SERVER['HTTP_HOST'].'/wp-json/wp_SSO/login',
+			'redirectUri'             => $redirect_uri,
 			'urlAuthorize'            => 'https://id.solodev.com/oauth2/authorize',
 			'urlAccessToken'          => 'https://id.solodev.com/oauth2/access_token',
 			'urlResourceOwnerDetails' => '',
