@@ -76,7 +76,7 @@ RUN docker-php-ext-install \
         mongodb \
         oauth \
 		redis \
-		ssh2 \
+		# ssh2 \
 		yaml \
 	; \
 	runDeps="$( \
