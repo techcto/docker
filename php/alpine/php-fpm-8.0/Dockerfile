@@ -34,12 +34,13 @@ RUN set -ex; \
 		libintl \
 		gettext \
 		nss postfix rsyslog \
-        zip unzip wget curl ;
+        zip libzip-dev unzip wget curl ;
 
 # RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
 # RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_8.0.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
 
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/--with-jpeg=/usr/include/;
+RUN docker-php-ext-configure zip --with-libzip
 RUN docker-php-ext-install \
 		bcmath \	
 		bz2 \
