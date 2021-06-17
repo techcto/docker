@@ -40,7 +40,7 @@ RUN set -ex; \
 # RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_8.0.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
 
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/--with-jpeg=/usr/include/;
-RUN docker-php-ext-configure zip --with-libzip
+RUN docker-php-ext-configure zip;
 RUN docker-php-ext-install \
 		bcmath \	
 		bz2 \
