@@ -71,12 +71,12 @@ RUN docker-php-ext-install \
 		redis \
 		xdebug \
 	; \
-	pecl install ssh2-1.3; \
+	pecl install ssh2-1.3.1; \
 	docker-php-ext-enable \
         mongodb \
         oauth \
 		redis \
-		# ssh2 \
+		ssh2 \
 		yaml \
 	; \
 	runDeps="$( \
