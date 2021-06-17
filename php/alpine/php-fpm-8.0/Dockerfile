@@ -20,7 +20,6 @@ RUN set -ex; \
 		libssh2-dev \
 		libssh2 \
 		openldap-dev \
-		python \
 		python3 \
 		npm \
 		bash \
