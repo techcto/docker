@@ -1,6 +1,6 @@
-FROM php:7.2-fpm-alpine3.10
+FROM php:8.0-fpm-alpine3.14
 
-ENV MEMCACHE_VERSION 2.2.0
+
 ENV TIDY_VERSION=5.1.25
 RUN apk update
 
@@ -38,7 +38,7 @@ RUN set -ex; \
         zip unzip wget curl ;
 
 RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
-RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_7.2.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
+RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_8.0.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-png-dir=/usr --with-jpeg-dir=/usr;
 RUN docker-php-ext-install \
