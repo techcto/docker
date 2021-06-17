@@ -93,7 +93,6 @@ RUN docker-php-ext-install \
 #Install Composer
 COPY ./composer.sh ./composer.sh
 RUN sh composer.sh --install-dir=/usr/local/bin --filename=composer \
-    && composer global require "hirak/prestissimo:^0.3" \
     && rm -rf composer.sh
 
 COPY ./php.ini /usr/local/etc/php/php.ini
