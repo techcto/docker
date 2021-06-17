@@ -58,7 +58,7 @@ RUN docker-php-ext-install \
 		sysvsem \
 		sysvshm \
 		tidy \
-		wddx \
+		# wddx \
 		xsl \
 		zip \
 	; \
@@ -70,7 +70,7 @@ RUN docker-php-ext-install \
 		redis \
 		xdebug \
 	; \
-	pecl install ssh2-1.0; \
+	pecl install ssh2-1.3; \
 	docker-php-ext-enable \
         mongodb \
         oauth \
