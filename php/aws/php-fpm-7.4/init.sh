@@ -3,8 +3,7 @@ yum -y remove php* httpd*
 
 #Install Required Devtools
 yum -y install gcc-c++ gcc pcre-devel make zip unzip wget curl cmake git yum-utils sudo sendmail
-wget http://195.220.108.108/linux/epel/6/x86_64/Packages/s/scl-utils-20120229-1.el6.x86_64.rpm
-rpm -Uvh scl-utils-20120229-1.el6.x86_64.rpm
+yum -y install scl-utils
 
 #Install Required Repos
 wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
@@ -12,20 +11,20 @@ wget http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 rpm -Uvh epel-release-latest-7.noarch.rpm
 rpm -Uvh remi-release-7.rpm
 yum-config-manager --enable remi-php74
-yum --enablerepo=epel --disablerepo=amzn2-core -y install libwebp
+yum --enablerepo=epel -y install libwebp
 
 #Update all libs
 yum update -y
 
 #Install Apache 2.4
-yum --enablerepo=epel,remi install -y httpd24
+yum --enablerepo=epel,remi install -y httpd
 sed -i 's/LoadModule mpm_prefork_module/#LoadModule mpm_prefork_module/g' /etc/httpd/conf.modules.d/00-mpm.conf
 sed -i 's/#LoadModule mpm_event_module/LoadModule mpm_event_module/g' /etc/httpd/conf.modules.d/00-mpm.conf
 service httpd start
 chkconfig httpd on
 
 #Install SSL
-yum -y install openssl-devel mod24_ssl
+yum -y install openssl-devel mod_ssl
 sed -i 's/SSLProtocol all -SSLv2$/SSLProtocol all -SSLv2 -SSLv3/g' /etc/httpd/conf.d/ssl.conf
 
 #Install PHP-FPM 7.4
