@@ -2,7 +2,7 @@
 yum -y remove php* httpd*
 
 #Install Required Devtools
-yum -y install gcc-c++ gcc pcre-devel make zip unzip wget curl cmake git yum-utils sudo sendmail
+yum -y install gcc-c++ gcc pcre-devel make zip unzip wget curl cmake git yum-utils sudo sendmail tar
 yum -y install scl-utils
 
 #Install Required Repos
@@ -11,7 +11,8 @@ wget http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 rpm -Uvh epel-release-latest-7.noarch.rpm
 rpm -Uvh remi-release-7.rpm
 yum-config-manager --enable remi-php74
-yum --enablerepo=epel -y install libwebp
+#yum --enablerepo=epel -y install libwebp
+yum --enablerepo=epel,remi --disablerepo=amzn2-core -y install libwebp
 
 #Update all libs
 yum update -y
