@@ -2,23 +2,19 @@
 yum -y remove php* httpd*
 
 #Install Required Devtools
-yum -y install gcc-c++ gcc pcre-devel make zip unzip wget curl cmake git yum-utils sudo sendmail tar
-yum -y install scl-utils
+yum -y install gcc-c++ gcc pcre-devel make zip unzip wget curl cmake git yum-utils sudo sendmail tar scl-utils
 
 #Install Required Repos
-wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-wget http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-rpm -Uvh epel-release-latest-7.noarch.rpm
-rpm -Uvh remi-release-7.rpm
-yum-config-manager --enable remi-php74
-#yum --enablerepo=epel -y install libwebp
-yum --enablerepo=epel,remi --disablerepo=amzn2-core -y install libwebp
+yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum install -y https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+yum-config-manager --disable 'remi-php*'
+yum-config-manager --setopt="remi-php74.priority=5" --enable remi-php74
 
 #Update all libs
 yum update -y
 
 #Install Apache 2.4
-yum --enablerepo=epel,remi install -y httpd
+yum install -y httpd
 sed -i 's/LoadModule mpm_prefork_module/#LoadModule mpm_prefork_module/g' /etc/httpd/conf.modules.d/00-mpm.conf
 sed -i 's/#LoadModule mpm_event_module/LoadModule mpm_event_module/g' /etc/httpd/conf.modules.d/00-mpm.conf
 service httpd start
@@ -32,7 +28,7 @@ sed -i 's/SSLProtocol all -SSLv2$/SSLProtocol all -SSLv2 -SSLv3/g' /etc/httpd/co
 yum install -y tidy php74-php-fpm php74-php-common \
 php74-php-devel php74-php-mysqli php74-php-mysqlnd php74-php-pdo_mysql \
 php74-php-gd php74-php-mbstring php74-php-pear php74-php-soap php74-php-tidy \
-php74-php-pecl-mongodb php74-php-pecl-apcu php74-php-pecl-oauth php74-php-pecl-zip php74-php-pecl-redis
+php74-php-pecl-mongodb php74-php-pecl-apcu php74-php-pecl-oauth php74-php-pecl-redis
 scl enable php74 'php -v'
 ln -s /usr/bin/php74 /usr/bin/php
 
