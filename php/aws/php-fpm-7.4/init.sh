@@ -2,14 +2,14 @@
 yum -y remove php* httpd*
 
 #Install Required Devtools
-yum -y install gcc-c++ gcc pcre-devel make zip unzip wget curl cmake git yum-utils sudo sendmail scl-utils
+yum -y install gcc-c++ gcc pcre-devel make zip unzip wget curl cmake git yum-utils sudo sendmail tar scl-utils
 
 #Install Required Repos
-wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-wget http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-rpm -Uvh epel-release-latest-7.noarch.rpm
-rpm -Uvh remi-release-7.rpm
-yum-config-manager --enable remi-php74
+yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum install -y https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+yum -y --enablerepo=epel install sshpass
+yum-config-manager --disable 'remi-php*'
+yum-config-manager --setopt="remi-php74.priority=5" --enable remi-php74
 yum --enablerepo=epel --disablerepo=amzn2-core -y install libwebp
 
 #Update all libs
