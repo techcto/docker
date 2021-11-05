@@ -10,7 +10,6 @@ yum install -y https://rpms.remirepo.net/enterprise/remi-release-7.rpm
 yum -y --enablerepo=epel install sshpass
 yum-config-manager --disable 'remi-php*'
 yum-config-manager --setopt="remi-php74.priority=5" --enable remi-php74
-yum --enablerepo=epel --disablerepo=amzn2-core -y install libwebp
 
 #Update all libs
 yum update -y
@@ -30,7 +29,7 @@ sed -i 's/SSLProtocol all -SSLv2$/SSLProtocol all -SSLv2 -SSLv3/g' /etc/httpd/co
 yum install -y tidy php74-php-fpm php74-php-common \
 php74-php-devel php74-php-mysqli php74-php-mysqlnd php74-php-pdo_mysql \
 php74-php-gd php74-php-mbstring php74-php-pear php74-php-soap php74-php-tidy \
-php74-php-pecl-mongodb php74-php-pecl-apcu php74-php-pecl-oauth php74-php-pecl-zip php74-php-pecl-redis
+php74-php-pecl-mongodb php74-php-pecl-apcu php74-php-pecl-oauth php74-php-pecl-redis
 scl enable php74 'php -v'
 ln -s /usr/bin/php74 /usr/bin/php
 
