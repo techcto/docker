@@ -32,6 +32,7 @@ RUN apk add --no-cache \
 		postfix \
 		rsyslog \
 		tidyhtml-dev \
+		gmp gmp-dev \
 		gettext-dev libxml2-dev libxslt-dev yaml-dev pcre-dev bzip2-dev \
         zip unzip wget curl ;
 
