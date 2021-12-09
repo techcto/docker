@@ -43,7 +43,7 @@ RUN	mkdir -p /usr/local/php/ext/ioncube && cp ./ioncube_loader_alpine_3_13_7.4_1
 RUN apk add --no-cache --virtual build-essentials \
 	freetype-dev libpng-dev libjpeg-turbo-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd \
+    && docker-php-ext-install gd gmp \
 		bcmath \	
 		bz2 \
 		calendar \
