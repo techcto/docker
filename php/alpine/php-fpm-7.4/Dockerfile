@@ -26,6 +26,9 @@ RUN apk add --no-cache \
 		libssh2-dev \
 		libwebp \
 		libzip-dev \
+		imagemagick \
+		imagemagick-libs \
+		imagemagick-dev \
 		freetype \
 		nss \
 		openldap-dev \
@@ -65,6 +68,7 @@ RUN apk add --no-cache --virtual build-essentials \
 	&& pecl install \
         apcu \
         mongodb \
+		imagick \
         oauth \
 		yaml \
 		redis \
@@ -76,6 +80,7 @@ RUN apk add --no-cache --virtual build-essentials \
 		redis \
 		ssh2 \
 		yaml \
+		imagick \
 	&& apk del build-essentials && rm -rf /usr/src/php* \
 	&& php --version
 
