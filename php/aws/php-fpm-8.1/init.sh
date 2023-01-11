@@ -78,7 +78,7 @@ mv composer.phar /usr/bin/composer
 wget http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
 tar -xzf ioncube_loaders_lin_x86-64.tar.gz
 cd ioncube/
-cp ioncube_loader_lin_7.4.so /opt/remi/php81/root/usr/lib64/php/modules/
+cp ioncube_loader_lin_8.1.so /opt/remi/php81/root/usr/lib64/php/modules/
 
 #Configure php.ini
 echo "short_open_tag = On" >> /etc/opt/remi/php81/php.ini
@@ -106,7 +106,7 @@ echo "opcache.enable=1" >>/etc/opt/remi/php81/php.ini
 echo "opcache.memory_consumption=128" >>/etc/opt/remi/php81/php.ini
 echo "opcache.max_accelerated_files=4000" >>/etc/opt/remi/php81/php.ini
 echo "opcache_revalidate_freq = 240" >>/etc/opt/remi/php81/php.ini
-echo "zend_extension=/opt/remi/php81/root/usr/lib64/php/modules/ioncube_loader_lin_7.4.so" >>/etc/opt/remi/php81/php.ini
+echo "zend_extension=/opt/remi/php81/root/usr/lib64/php/modules/ioncube_loader_lin_8.1.so" >>/etc/opt/remi/php81/php.ini
 
 #Activate
 service httpd restart
