@@ -4,7 +4,7 @@ FROM php:8.1-fpm-alpine
 ENV TIDY_VERSION=5.1.25
 RUN apk update
 
-RUN apk add mongodb-tools --repository=http://dl-cdn.alpinelinux.org/alpine/v3.9/community
+RUN apk add mongodb-tools
 
 RUN set -ex; \
 	apk add --no-cache --virtual .build-deps \
@@ -39,7 +39,6 @@ RUN set -ex; \
 RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
 RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_8.1.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
 
-RUN docker-php-ext-configure gd --with-freetype=/usr/include/--with-jpeg=/usr/include/;
 RUN docker-php-ext-configure zip;
 RUN docker-php-ext-install \
 		bcmath \	
@@ -47,7 +46,6 @@ RUN docker-php-ext-install \
 		calendar \
 		dba \
 		exif \
-		gd \
 		gettext \
 		ldap \
 		mysqli \
@@ -79,17 +77,11 @@ RUN docker-php-ext-install \
 		ssh2 \
 		yaml \
 	; \
-	runDeps="$( \
-		scanelf --needed --nobanner --recursive \
-			/usr/local/lib/php/extensions \
-			| awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
-			| sort -u \
-			| xargs -r apk info --installed \
-			| sort -u \
-	)"; \
-	apk add --virtual $runDeps; \
 	rm -rf /tmp/pear ~/.pearrc; \
 	php --version
+
+RUN docker-php-ext-configure gd --prefix=/usr --with-freetype --with-jpeg; \
+	docker-php-ext-install gd
 
 #Install Composer
 COPY ./composer.sh ./composer.sh
