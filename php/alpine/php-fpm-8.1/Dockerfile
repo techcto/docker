@@ -1,4 +1,4 @@
-FROM php:8.1-fpm-alpine
+FROM php:8.1-fpm-alpine3.13
 
 
 ENV TIDY_VERSION=5.1.25
