@@ -1,10 +1,8 @@
-FROM php:8.1-fpm-alpine3.13
+FROM php:8.1-fpm-alpine
 
 
 ENV TIDY_VERSION=5.1.25
 RUN apk update
-
-RUN apk add mongodb-tools
 
 RUN set -ex; \
 	apk add --no-cache --virtual .build-deps \
@@ -82,7 +80,8 @@ RUN docker-php-ext-install \
 	php --version
 
 RUN pecl install mongodb; \
-	docker-php-ext-enable mongodb
+	docker-php-ext-enable mongodb; \
+	apk add mongodb-tools
 
 #Install Composer
 COPY ./composer.sh ./composer.sh
