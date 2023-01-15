@@ -63,7 +63,6 @@ RUN docker-php-ext-install \
 	; \
 	pecl install \
         apcu \
-        mongodb \
         oauth \
 		yaml \
 		redis \
@@ -71,7 +70,6 @@ RUN docker-php-ext-install \
 	; \
 	pecl install ssh2-1.3.1; \
 	docker-php-ext-enable \
-        mongodb \
         oauth \
 		redis \
 		ssh2 \
@@ -82,6 +80,9 @@ RUN docker-php-ext-install \
 
 RUN docker-php-ext-configure gd --prefix=/usr --with-freetype --with-jpeg; \
 	docker-php-ext-install gd
+
+RUN pecl install mongodb; \
+	docker-php-ext-enable mongodb
 
 #Install Composer
 COPY ./composer.sh ./composer.sh
