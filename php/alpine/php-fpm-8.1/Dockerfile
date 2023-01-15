@@ -83,7 +83,7 @@ RUN pecl install mongodb; \
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/; \
 	docker-php-ext-install gd
 
-#Install Composer
+#Install Composer.
 COPY ./composer.sh ./composer.sh
 RUN sh composer.sh --install-dir=/usr/local/bin --filename=composer \
     && rm -rf composer.sh
