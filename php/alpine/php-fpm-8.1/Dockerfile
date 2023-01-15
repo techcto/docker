@@ -39,6 +39,9 @@ RUN set -ex; \
 RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
 RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_8.1.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
 
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg; \
+	docker-php-ext-install gd
+
 RUN docker-php-ext-configure zip;
 RUN docker-php-ext-install \
 		bcmath \	
@@ -77,9 +80,6 @@ RUN docker-php-ext-install \
 	; \
 	rm -rf /tmp/pear ~/.pearrc; \
 	php --version
-
-RUN docker-php-ext-configure gd --prefix=/usr --with-freetype --with-jpeg; \
-	docker-php-ext-install gd
 
 RUN pecl install mongodb; \
 	docker-php-ext-enable mongodb
