@@ -26,7 +26,7 @@ yum -y install openssl-devel mod_ssl
 sed -i 's/SSLProtocol all -SSLv2$/SSLProtocol all -SSLv2 -SSLv3/g' /etc/httpd/conf.d/ssl.conf
 
 #Install PHP-FPM 8.1
-yum install -y tidy php81-php-fpm php81-php-common \
+yum install -y tidy php81-php-fpm php81-php-common php81-php-sodium \
 php81-php-devel php81-php-mysqli php81-php-mysqlnd php81-php-pdo_mysql \
 php81-php-gd php81-php-mbstring php81-php-pear php81-php-soap php81-php-tidy \
 php81-php-pecl-mongodb php81-php-pecl-apcu php81-php-pecl-oauth php81-php-pecl-redis
