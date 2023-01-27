@@ -34,8 +34,10 @@ RUN set -ex; \
 		nss postfix rsyslog \
         zip libzip-dev unzip wget curl ;
 
-RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
-RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_8.1.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
+# RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
+# RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_8.1.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
+RUN	mkdir -p /usr/local/php/ext/ioncube
+COPY ./ioncube_loader_alpine_8.1_12.0.5.so /usr/local/php/ext/ioncube/ioncube_loader_lin_8.1.so
 
 RUN docker-php-ext-configure zip;
 RUN docker-php-ext-install \
