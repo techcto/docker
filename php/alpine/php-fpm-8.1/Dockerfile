@@ -2,6 +2,10 @@ FROM php:8.1-fpm-alpine3.17
 
 
 ENV TIDY_VERSION=5.1.25
+# For mongo shell command to be installed:
+RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/main' >> /etc/apk/repositories; \
+    echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/community' >> /etc/apk/repositories
+
 RUN apk update
 
 RUN set -ex; \
