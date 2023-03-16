@@ -80,7 +80,7 @@ RUN docker-php-ext-install \
 
 RUN pecl install mongodb; \
 	docker-php-ext-enable mongodb; \
-	apd add mongodb; \
+	apk add mongodb; \
 	apk add mongodb-tools
 
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/; \
