@@ -1,5 +1,9 @@
 FROM php:8.1-fpm-alpine3.17
 
+#Install Composer
+RUN wget https://getcomposer.org/installer -O composer-setup.php
+RUN php composer-setup.php && rm -rf composer-setup.php && mv composer.phar /usr/local/bin/composer
+
 ENV TIDY_VERSION=5.1.25
 # For mongo shell command to be installed:
 RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/main' >> /etc/apk/repositories; \
@@ -36,11 +40,6 @@ RUN set -ex; \
 	gettext \
 	nss postfix rsyslog \
 	zip libzip-dev unzip wget curl ;
-
-# RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
-# RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_8.1.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
-RUN	mkdir -p /usr/local/php/ext/ioncube
-COPY ./ioncube_loader_alpine_8.1_12.0.5.so /usr/local/php/ext/ioncube/ioncube_loader_lin_8.1.so
 
 RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg;
 RUN docker-php-ext-configure zip;
@@ -88,8 +87,10 @@ RUN pecl install mongodb; \
 	apk add mongodb; \
 	apk add mongodb-tools
 
-#Install Composer.
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
+RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_8.1.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
+# RUN	mkdir -p /usr/local/php/ext/ioncube
+# COPY ./ioncube_loader_alpine_8.1_12.0.5.so /usr/local/php/ext/ioncube/ioncube_loader_lin_8.1.so
 
 COPY ./php.ini /usr/local/etc/php/php.ini
 COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf
