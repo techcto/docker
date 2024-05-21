@@ -2,7 +2,7 @@ FROM php:8.1-fpm-alpine3.17
 
 #Install Composer
 RUN wget https://getcomposer.org/installer -O composer-setup.php
-RUN php composer-setup.php && rm -rf composer-setup.php && mv composer.phar /usr/local/bin/composer
+RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer && rm -rf composer-setup.php
 
 ENV TIDY_VERSION=5.1.25
 # For mongo shell command to be installed:
