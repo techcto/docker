@@ -42,6 +42,7 @@ RUN set -ex; \
 RUN	mkdir -p /usr/local/php/ext/ioncube
 COPY ./ioncube_loader_alpine_8.1_12.0.5.so /usr/local/php/ext/ioncube/ioncube_loader_lin_8.1.so
 
+RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg;
 RUN docker-php-ext-configure zip;
 RUN docker-php-ext-install \
 	bcmath \	
@@ -60,6 +61,7 @@ RUN docker-php-ext-install \
 	sysvsem \
 	sysvshm \
 	tidy \
+	gd \
 	# wddx \
 	xsl \
 	zip \
@@ -86,25 +88,11 @@ RUN pecl install mongodb; \
 	apk add mongodb; \
 	apk add mongodb-tools
 
-RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/; \
-	docker-php-ext-install gd
-
 #Install Composer.
-COPY ./composer.sh ./composer.sh
-RUN sh composer.sh --install-dir=/usr/local/bin --filename=composer \
-	&& rm -rf composer.sh
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 COPY ./php.ini /usr/local/etc/php/php.ini
 COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf
-
-#NPM
-RUN mkdir -p "/var/www/node_modules_global" \
-	&& mkdir -p "/var/www/.npm" \
-	&& npm config set prefix "/var/www/node_modules_global" \
-	&& npm install -g --unsafe-perm @fortawesome/fontawesome-free autoprefixer clean-css-cli node-sass npm-run-all postcss postcss-cli gulp gulp-autoprefixer \
-	gulp-clean gulp-clean-css gulp-concat gulp-rename gulp-sass gulp-uglify node-sass \
-	&& chown -Rf www-data.www-data "/var/www/node_modules_global" "/var/www/.npm" \
-	&& chmod -Rf 2770 "/var/www/node_modules_global" "/var/www/.npm"
 
 #Remove useless config
 RUN rm -rf /etc/php8/php-fpm.d
