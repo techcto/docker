@@ -14,6 +14,12 @@ yum-config-manager --setopt="remi-php81.priority=5" --enable remi-php81
 #Update all libs
 yum update -y
 
+#AWS
+curl -qL -o packer.zip https://releases.hashicorp.com/packer/0.12.3/packer_0.12.3_linux_amd64.zip && unzip packer.zip
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+./aws/install
+
 #Install Apache 2.4
 yum install -y httpd
 sed -i 's/LoadModule mpm_prefork_module/#LoadModule mpm_prefork_module/g' /etc/httpd/conf.modules.d/00-mpm.conf
