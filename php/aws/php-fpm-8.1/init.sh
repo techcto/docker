@@ -32,9 +32,9 @@ yum -y install openssl-devel mod_ssl
 sed -i 's/SSLProtocol all -SSLv2$/SSLProtocol all -SSLv2 -SSLv3/g' /etc/httpd/conf.d/ssl.conf
 
 #Helm
-curl https://get.helm.sh/helm-v3.6.3-linux-386.tar.gz -o helm-v3.6.3-linux-386.tar.gz
-tar -xzf helm-v3.6.3-linux-386.tar.gz && ls -al
-mv linux-386/helm /usr/local/bin/helm
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
 
 #Install PHP-FPM 8.1
 yum install -y tidy php81-php-fpm php81-php-common php81-php-sodium \
