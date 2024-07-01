@@ -10,7 +10,9 @@ phases:
       # - ./build.sh php/alpine/php-fpm-7.2 techcto alpine-php-fpm-7.2 1.2.2
       # - ./build.sh php/alpine/php-fpm-7.4 techcto alpine-php-fpm-7.4
       # - ./build.sh php/alpine/php-fpm-8.0 techcto alpine-php-fpm-8.0
-      - ./build.sh php/alpine/php-fpm-8.1 techcto alpine-php-fpm-8.1
+
+      # - ./build.sh php/alpine/php-fpm-8.1 techcto alpine-php-fpm-8.1
+      
       # - ./build.sh php/alpine/httpd techcto httpd
       # - ./build.sh php/aws/php-fpm-7.2 techcto aws-php-fpm-7.2
       # - ./build.sh php/aws/php-fpm-5.6 techcto aws-php-fpm-5.6

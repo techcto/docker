@@ -28,7 +28,7 @@ service httpd start
 chkconfig httpd on
 
 #Install SSL
-yum -y install openssl-devel mod_ssl
+yum -y install openssl openssl-devel mod_ssl
 sed -i 's/SSLProtocol all -SSLv2$/SSLProtocol all -SSLv2 -SSLv3/g' /etc/httpd/conf.d/ssl.conf
 
 #Helm
