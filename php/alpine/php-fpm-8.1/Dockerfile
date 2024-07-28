@@ -5,6 +5,7 @@ RUN apk update
 
 RUN set -ex; \
 	apk add --no-cache --virtual .build-deps \
+	aws-cli \
 	autoconf \
 	build-base \
 	gettext-dev \
@@ -22,6 +23,7 @@ RUN set -ex; \
 	bash \
 	git \
 	sed \
+	jq \
 	yaml \
 	yaml-dev \
 	pcre-dev \
