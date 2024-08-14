@@ -11,7 +11,7 @@ phases:
       # - ./build.sh php/alpine/php-fpm-7.4 techcto alpine-php-fpm-7.4
       # - ./build.sh php/alpine/php-fpm-8.0 techcto alpine-php-fpm-8.0
 
-      - ./build.sh php/alpine/php-fpm-8.1 techcto alpine-php-fpm-8.1
+      # - ./build.sh php/alpine/php-fpm-8.1 techcto alpine-php-fpm-8.1
       
       # - ./build.sh php/alpine/httpd techcto httpd
       # - ./build.sh php/aws/php-fpm-7.2 techcto aws-php-fpm-7.2
@@ -21,7 +21,7 @@ phases:
       # - ./build.sh php/aws/php-fpm-8.1 techcto aws-php-fpm-8.1
 
       # - ./build.sh python/codebuild techcto python-codebuild
-      # - ./build.sh packer techcto packer
+      - ./build.sh packer techcto packer
       # - ./build.sh python/duplicity techcto duplicity
       # - ./build.sh redis techcto redis 6.2
       # - ./build.sh mongo techcto mongo 4
