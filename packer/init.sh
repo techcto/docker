@@ -13,3 +13,5 @@ unzip awscliv2.zip
 ./aws/install
 
 packer -v
+
+packer plugins install github.com/hashicorp/amazon
