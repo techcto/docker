@@ -10,8 +10,6 @@ else
   echo "No tag supplied"
 fi
 
-docker save $IMAGE | docker run  -v /tmp -i myyk/docker-squash -t $IMAGE -verbose | docker load
-
 docker push $IMAGE:latest
 if [ -n "$4" ]; then
   docker push $IMAGE:$4
