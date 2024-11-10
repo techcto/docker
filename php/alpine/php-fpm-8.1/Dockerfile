@@ -24,6 +24,7 @@ RUN set -ex; \
 	git \
 	rsync \
 	mysql-client \
+	mariadb-connector-c \
 	sed \
 	jq \
 	yaml \
