@@ -23,7 +23,7 @@ RUN set -ex; \
 	bash \
 	git \
 	rsync \
-	mysql \
+	mysql-client \
 	sed \
 	jq \
 	yaml \
