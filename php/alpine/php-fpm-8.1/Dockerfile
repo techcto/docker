@@ -22,6 +22,8 @@ RUN set -ex; \
 	npm \
 	bash \
 	git \
+	rsync \
+	mysql \
 	sed \
 	jq \
 	yaml \
@@ -77,12 +79,12 @@ RUN docker-php-ext-install \
 	php --version
 
 # For mongo shell command to be installed:
-# RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/main' >> /etc/apk/repositories; \
-# 	echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/community' >> /etc/apk/repositories
+RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.9/main' >> /etc/apk/repositories; \
+	echo 'http://dl-cdn.alpinelinux.org/alpine/v3.9/community' >> /etc/apk/repositories
+
 RUN pecl install mongodb; \
 	docker-php-ext-enable mongodb; \
-	apk add mongodb; \
-	apk add mongodb-tools
+	apk add mongodb mongodb-tools
 
 # RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
 # RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_8.1.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
