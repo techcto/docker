@@ -77,8 +77,8 @@ RUN docker-php-ext-install \
 	php --version
 
 # For mongo shell command to be installed:
-RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/main' >> /etc/apk/repositories; \
-	echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/community' >> /etc/apk/repositories
+# RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/main' >> /etc/apk/repositories; \
+# 	echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/community' >> /etc/apk/repositories
 RUN pecl install mongodb; \
 	docker-php-ext-enable mongodb; \
 	apk add mongodb; \
