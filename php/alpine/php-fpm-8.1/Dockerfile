@@ -1,7 +1,7 @@
-FROM php:8.1-fpm-alpine3.16
+FROM php:8.1-fpm-alpine3.21
 
 ENV TIDY_VERSION=5.1.25
-RUN apk update
+RUN apk update && apk upgrade
 
 RUN set -ex; \
 	apk add --no-cache --virtual .build-deps \
@@ -19,9 +19,7 @@ RUN set -ex; \
 	libssh2 \
 	openldap-dev \
 	python3 \
-	npm \
 	bash \
-	git \
 	rsync \
 	mysql-client \
 	mariadb-connector-c \
@@ -36,7 +34,12 @@ RUN set -ex; \
 	libintl \
 	gettext \
 	nss postfix rsyslog \
-	zip libzip-dev unzip wget curl ;
+	zip libzip-dev unzip wget ;
+
+# get latest of these (regular apk version has vulnerabilities)
+RUN apk del openssl && \ 
+	apk add --no-cache -X https://dl-cdn.alpinelinux.org/alpine/edge/main git openssl curl nodejs && \
+	apk add --no-cache -X https://dl-cdn.alpinelinux.org/alpine/edge/community npm
 
 RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg;
 RUN docker-php-ext-configure zip;
@@ -79,13 +82,13 @@ RUN docker-php-ext-install \
 	rm -rf /tmp/pear ~/.pearrc; \
 	php --version
 
-# For mongo shell command to be installed:
-RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.9/main' >> /etc/apk/repositories; \
-	echo 'http://dl-cdn.alpinelinux.org/alpine/v3.9/community' >> /etc/apk/repositories
-
 RUN pecl install mongodb; \
-	docker-php-ext-enable mongodb; \
-	apk add mongodb mongodb-tools
+	docker-php-ext-enable mongodb;
+RUN apk add --no-cache -X https://dl-cdn.alpinelinux.org/alpine/edge/community mongodb-tools
+RUN npm install -g mongosh
+
+# Create a symlink to rename 'mongosh' to 'mongo'
+RUN ln -s /usr/local/bin/mongosh /usr/local/bin/mongo
 
 # RUN cd /root && wget https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && tar -xvzf ioncube_loaders_lin_x86-64.tar.gz;
 # RUN	mkdir -p /usr/local/php/ext/ioncube && cd /root/ioncube && cp ioncube_loader_lin_8.1.so /usr/local/php/ext/ioncube/ && rm -Rf /root/ioncube;
