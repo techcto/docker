@@ -1,6 +1,6 @@
 set -e
 
-mongo <<EOF
+mongosh <<EOF
 var db = connect("mongodb://localhost/$MONGO_INITDB_DATABASE");
 db.createUser({
   user:  '$MONGO_INITDB_ROOT_USERNAME',
