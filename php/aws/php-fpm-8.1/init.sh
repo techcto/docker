@@ -5,7 +5,7 @@ yum -y remove php* httpd*
 yum -y install gcc-c++ gcc pcre-devel make zip unzip wget curl cmake git yum-utils sudo sendmail tar scl-utils jq
 
 #Install Required Repos
-yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum install -y https://archives.fedoraproject.org/pub/archive/epel/7/x86_64/Packages/e/epel-release-7-14.noarch.rpm
 yum install -y https://rpms.remirepo.net/enterprise/remi-release-7.rpm
 yum -y --enablerepo=epel install sshpass
 yum-config-manager --disable 'remi-php*'
