@@ -40,7 +40,7 @@ chmod 700 get_helm.sh
 yum install -y tidy php81-php-fpm php81-php-common php81-php-sodium \
 php81-php-devel php81-php-mysqli php81-php-mysqlnd php81-php-pdo_mysql \
 php81-php-gd php81-php-mbstring php81-php-pear php81-php-soap php81-php-tidy \
-php81-php-pecl-mongodb php81-php-pecl-apcu php81-php-pecl-oauth php81-php-pecl-redis
+php81-php-pecl-apcu php81-php-pecl-oauth php81-php-pecl-redis
 scl enable php81 'php -v'
 ln -s /usr/bin/php81 /usr/bin/php
 
