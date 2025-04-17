@@ -1,21 +1,24 @@
-FROM 'httpd:alpine'
+FROM httpd:alpine
 
 #Install base
 RUN apk update
 RUN set -ex; \
 	\
 	apk add \
-		python \
+		python3 \
+		py3-pip \
 		php \
 		npm \
 		bash \
-		git \
 		g++ \
 		make \
 		linux-headers \
 		sed \
         zip unzip wget curl \
 	;
+
+# get latest git (regular apk version has vulnerabilities)
+RUN apk add --no-cache -X https://dl-cdn.alpinelinux.org/alpine/edge/main git
 
 #Configure Node
 RUN mkdir -p /var/www/.npm /var/www/.npm-global \
