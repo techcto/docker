@@ -5,7 +5,7 @@ yum -y remove php* httpd*
 yum -y install gcc-c++ gcc pcre-devel make zip unzip wget curl cmake git yum-utils sudo sendmail tar scl-utils jq
 
 #Install Required Repos
-yum install -y https://archives.fedoraproject.org/pub/archive/epel/7/x86_64/Packages/e/epel-release-7-14.noarch.rpm
+yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 yum install -y https://rpms.remirepo.net/enterprise/remi-release-7.rpm
 yum -y --enablerepo=epel install sshpass
 yum-config-manager --disable 'remi-php*'
@@ -37,11 +37,10 @@ chmod 700 get_helm.sh
 ./get_helm.sh
 
 #Install PHP-FPM 8.1
-yum install -y php-pecl-mongodb
 yum install -y tidy php81-php-fpm php81-php-common php81-php-sodium \
 php81-php-devel php81-php-mysqli php81-php-mysqlnd php81-php-pdo_mysql \
 php81-php-gd php81-php-mbstring php81-php-pear php81-php-soap php81-php-tidy \
-php81-php-pecl-apcu php81-php-pecl-oauth php81-php-pecl-redis
+php81-php-pecl-mongodb php81-php-pecl-apcu php81-php-pecl-oauth php81-php-pecl-redis
 scl enable php81 'php -v'
 ln -s /usr/bin/php81 /usr/bin/php
 
