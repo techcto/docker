@@ -37,6 +37,7 @@ chmod 700 get_helm.sh
 ./get_helm.sh
 
 #Install PHP-FPM 8.1
+yum install -y php-pecl-mongodb
 yum install -y tidy php81-php-fpm php81-php-common php81-php-sodium \
 php81-php-devel php81-php-mysqli php81-php-mysqlnd php81-php-pdo_mysql \
 php81-php-gd php81-php-mbstring php81-php-pear php81-php-soap php81-php-tidy \
