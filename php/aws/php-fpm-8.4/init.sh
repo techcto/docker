@@ -4,18 +4,11 @@ dnf -y remove php* httpd*
 #Install dnf-plugins-core first
 dnf -y install dnf-plugins-core
 
-#Install critical tools immediately
-dnf -y install wget curl unzip tar
-
-#Install Required Repos
-dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm --skip-broken --allowerasing || true
-dnf install -y https://rpms.remirepo.net/enterprise/remi-release-9.rpm --skip-broken --allowerasing || true
-dnf -y --enablerepo=epel install sshpass || dnf -y install sshpass
-dnf config-manager --disable 'remi-php*' || true
-dnf config-manager --setopt="remi-php84.priority=5" --enable remi-php84 || true
+#Install critical tools immediately (including tar for helm)
+dnf -y install wget curl unzip tar gzip
 
 #Install remaining devtools
-dnf -y install gcc-c++ gcc pcre-devel make zip cmake git dnf-utils sudo sendmail jq
+dnf -y install gcc-c++ gcc pcre-devel make zip cmake git dnf-utils sudo sendmail jq sshpass
 
 #Update all libs
 dnf update -y
@@ -42,12 +35,14 @@ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scrip
 chmod 700 get_helm.sh
 ./get_helm.sh
 
-#Install PHP-FPM 8.4
-dnf install -y tidy php84-php-fpm php84-php-common php84-php-sodium \
-php84-php-devel php84-php-mysqli php84-php-mysqlnd php84-php-pdo_mysql \
-php84-php-gd php84-php-mbstring php84-php-pear php84-php-soap php84-php-tidy \
-php84-php-pecl-mongodb php84-php-pecl-apcu php84-php-pecl-oauth php84-php-pecl-redis
-ln -s /usr/bin/php84 /usr/bin/php
+#Install PHP-FPM 8.4 (Amazon Linux 2023)
+dnf install -y tidy php php-fpm php-common php-sodium \
+php-devel php-mysqlnd php-pdo \
+php-gd php-mbstring php-pear php-soap php-tidy \
+php-pecl-mongodb php-pecl-apcu php-pecl-redis php-opcache
+
+# Get PHP version
+PHP_VERSION=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
 
 #Configure PHP-FPM conf for Apache (php84-php.conf)
 rm -Rf /etc/httpd/conf.d/php.conf
@@ -62,10 +57,10 @@ echo 'SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1' >> /etc/httpd
 echo "<FilesMatch \.(php|phar|stml)$>" >> /etc/httpd/conf.d/php84-php.conf
 echo ' SetHandler "proxy:unix:/run/php-fpm/www.sock|fcgi://localhost"' >> /etc/httpd/conf.d/php84-php.conf
 echo "</FilesMatch>" >> /etc/httpd/conf.d/php84-php.conf
-echo "security.limit_extensions = .php .stml" >> /etc/opt/remi/php84/php-fpm.d/www.conf
-echo "listen = /run/php-fpm/www.sock" >> /etc/opt/remi/php84/php-fpm.d/www.conf
-echo "listen.owner = apache" >> /etc/opt/remi/php84/php-fpm.d/www.conf
-echo "listen.mode = 0660" >> /etc/opt/remi/php84/php-fpm.d/www.conf
+echo "security.limit_extensions = .php .stml" >> /etc/php-fpm.d/www.conf
+echo "listen = /run/php-fpm/www.sock" >> /etc/php-fpm.d/www.conf
+echo "listen.owner = apache" >> /etc/php-fpm.d/www.conf
+echo "listen.mode = 0660" >> /etc/php-fpm.d/www.conf
 
 #Install Node
 mkdir -p /var/www/.npm
@@ -87,7 +82,7 @@ chmod -Rf 2770 /var/www/.npm-global
 chown -Rf apache.apache /var/www/.npm-global
 
 #Install Composer
-curl -sS https://getcomposer.org/installer | /usr/bin/php84
+curl -sS https://getcomposer.org/installer | php
 mv composer.phar /usr/bin/composer
 chmod +x /usr/bin/composer
 
@@ -95,37 +90,41 @@ chmod +x /usr/bin/composer
 wget http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
 tar -xzf ioncube_loaders_lin_x86-64.tar.gz
 cd ioncube/
-cp ioncube_loader_lin_8.4.so /opt/remi/php84/root/usr/lib64/php/modules/
+PHP_EXT_DIR=$(php -r "echo ini_get('extension_dir');")
+cp ioncube_loader_lin_${PHP_VERSION}.so ${PHP_EXT_DIR}/ || cp ioncube_loader_lin_8.*.so ${PHP_EXT_DIR}/ioncube_loader.so
 
 #Configure php.ini
-echo "short_open_tag = On" >> /etc/opt/remi/php84/php.ini
-echo "expose_php = Off" >>/etc/opt/remi/php84/php.ini
-echo "max_execution_time = 90" >>/etc/opt/remi/php84/php.ini
-echo "max_input_time = 90" >>/etc/opt/remi/php84/php.ini
-echo "error_reporting = E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT & ~E_WARNING" >>/etc/opt/remi/php84/php.ini
-echo "post_max_size = 60M" >>/etc/opt/remi/php84/php.ini
-echo "upload_max_filesize = 60M" >>/etc/opt/remi/php84/php.ini
-#echo "allow_url_fopen = Off" >>/etc/opt/remi/php84/php.ini
-echo "date.timezone = UTC" >>/etc/opt/remi/php84/php.ini
-echo "realpath_cache_size = 1M" >>/etc/opt/remi/php84/php.ini
-echo "session.cookie_httponly = 1" >>/etc/opt/remi/php84/php.ini
-echo "[apcu]" >>/etc/opt/remi/php84/php.ini
-echo "apc.enabled=1" >>/etc/opt/remi/php84/php.ini
-echo "apc.shm_size=32M" >>/etc/opt/remi/php84/php.ini
-echo "apc.ttl=7200" >>/etc/opt/remi/php84/php.ini
-echo "apc.enable_cli=0" >>/etc/opt/remi/php84/php.ini
-echo "apc.serializer=php" >>/etc/opt/remi/php84/php.ini
-echo "apc.stat=0" >>/etc/opt/remi/php84/php.ini
-echo "[custom]" >>/etc/opt/remi/php84/php.ini
-echo "realpath_cache_ttl = 7200" >>/etc/opt/remi/php84/php.ini
-echo "realpath_cache_size = 4096k" >>/etc/opt/remi/php84/php.ini
-echo "opcache.enable=1" >>/etc/opt/remi/php84/php.ini
-echo "opcache.memory_consumption=128" >>/etc/opt/remi/php84/php.ini
-echo "opcache.max_accelerated_files=4000" >>/etc/opt/remi/php84/php.ini
-echo "opcache_revalidate_freq = 240" >>/etc/opt/remi/php84/php.ini
-echo "zend_extension=/opt/remi/php84/root/usr/lib64/php/modules/ioncube_loader_lin_8.4.so" >>/etc/opt/remi/php84/php.ini
+PHP_INI="/etc/php.ini"
+echo "short_open_tag = On" >> ${PHP_INI}
+echo "expose_php = Off" >>${PHP_INI}
+echo "max_execution_time = 90" >>${PHP_INI}
+echo "max_input_time = 90" >>${PHP_INI}
+echo "error_reporting = E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT & ~E_WARNING" >>${PHP_INI}
+echo "post_max_size = 60M" >>${PHP_INI}
+echo "upload_max_filesize = 60M" >>${PHP_INI}
+#echo "allow_url_fopen = Off" >>${PHP_INI}
+echo "date.timezone = UTC" >>${PHP_INI}
+echo "realpath_cache_size = 1M" >>${PHP_INI}
+echo "session.cookie_httponly = 1" >>${PHP_INI}
+echo "[apcu]" >>${PHP_INI}
+echo "apc.enabled=1" >>${PHP_INI}
+echo "apc.shm_size=32M" >>${PHP_INI}
+echo "apc.ttl=7200" >>${PHP_INI}
+echo "apc.enable_cli=0" >>${PHP_INI}
+echo "apc.serializer=php" >>${PHP_INI}
+echo "apc.stat=0" >>${PHP_INI}
+echo "[custom]" >>${PHP_INI}
+echo "realpath_cache_ttl = 7200" >>${PHP_INI}
+echo "realpath_cache_size = 4096k" >>${PHP_INI}
+echo "opcache.enable=1" >>${PHP_INI}
+echo "opcache.memory_consumption=128" >>${PHP_INI}
+echo "opcache.max_accelerated_files=4000" >>${PHP_INI}
+echo "opcache_revalidate_freq = 240" >>${PHP_INI}
+echo "zend_extension=${PHP_EXT_DIR}/ioncube_loader.so" >>${PHP_INI}
 
 #Activate
+systemctl enable php-fpm
+systemctl start php-fpm
 systemctl restart httpd
 
 #Cleanup
