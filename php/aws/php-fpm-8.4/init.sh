@@ -31,6 +31,8 @@ dnf -y install openssl openssl-devel mod_ssl
 sed -i 's/SSLProtocol all -SSLv2$/SSLProtocol all -SSLv2 -SSLv3/g' /etc/httpd/conf.d/ssl.conf
 
 #Helm
+export PATH=/usr/bin:$PATH
+which tar || dnf install -y tar
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 chmod 700 get_helm.sh
 ./get_helm.sh
@@ -39,7 +41,29 @@ chmod 700 get_helm.sh
 dnf install -y tidy php php-fpm php-common php-sodium \
 php-devel php-mysqlnd php-pdo \
 php-gd php-mbstring php-pear php-soap php-tidy \
-php-pecl-mongodb php-pecl-apcu php-pecl-redis php-opcache
+php-pecl-redis php-opcache
+
+# Install optional PECL packages if available
+dnf install -y php-pecl-apcu || echo "APCu not available, skipping..."
+
+# Install MongoDB Server and PHP extension
+cat > /etc/yum.repos.d/mongodb-org-7.0.repo <<'EOF'
+[mongodb-org-7.0]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/amazon/2023/mongodb-org/7.0/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://pgp.mongodb.com/server-7.0.asc
+EOF
+
+dnf install -y mongodb-org mongodb-mongosh
+systemctl enable mongod
+systemctl start mongod
+
+# Install MongoDB PHP driver via PECL
+dnf install -y php-pear php-devel openssl-devel
+pecl install mongodb
+echo "extension=mongodb.so" > /etc/php.d/40-mongodb.ini
 
 # Get PHP version
 PHP_VERSION=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
@@ -57,6 +81,13 @@ echo 'SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1' >> /etc/httpd
 echo "<FilesMatch \.(php|phar|stml)$>" >> /etc/httpd/conf.d/php84-php.conf
 echo ' SetHandler "proxy:unix:/run/php-fpm/www.sock|fcgi://localhost"' >> /etc/httpd/conf.d/php84-php.conf
 echo "</FilesMatch>" >> /etc/httpd/conf.d/php84-php.conf
+
+# Ensure PHP-FPM config directory exists
+mkdir -p /etc/php-fpm.d
+if [ ! -f /etc/php-fpm.d/www.conf ]; then
+    cp /etc/php-fpm.d/www.conf.default /etc/php-fpm.d/www.conf 2>/dev/null || touch /etc/php-fpm.d/www.conf
+fi
+
 echo "security.limit_extensions = .php .stml" >> /etc/php-fpm.d/www.conf
 echo "listen = /run/php-fpm/www.sock" >> /etc/php-fpm.d/www.conf
 echo "listen.owner = apache" >> /etc/php-fpm.d/www.conf
@@ -68,8 +99,8 @@ echo 'export NODE_PATH=/var/www/.npm-global/lib/node_modules' >> /var/www/.npmrc
 echo 'export PATH=$PATH:/var/www/.npm-global/bin' >> /var/www/.npmrc
 export PATH=/var/www/.npm-global/bin:$PATH
 
-curl -sL https://rpm.nodesource.com/setup_20.x | sudo -E bash -
-dnf install -y --enablerepo=nodesource nodejs
+# Install Node.js (Amazon Linux 2023 native)
+dnf install -y nodejs npm
 
 npm install -g autoprefixer clean-css-cli nodemon npm-run-all postcss-cli postcss-discard-empty shx uglify-js
 npm install -g -f --unsafe-perm node-sass
@@ -81,10 +112,19 @@ chown -Rf apache.apache /var/www/.npm
 chmod -Rf 2770 /var/www/.npm-global
 chown -Rf apache.apache /var/www/.npm-global
 
+# Verify PHP is installed
+if ! command -v php &> /dev/null; then
+    echo "ERROR: PHP installation failed. Retrying..."
+    dnf install -y php php-cli php-common
+fi
+
 #Install Composer
 curl -sS https://getcomposer.org/installer | php
 mv composer.phar /usr/bin/composer
 chmod +x /usr/bin/composer
+
+# Ensure wget and tar are available for IonCube
+dnf install -y wget tar
 
 #Install IonCube
 wget http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
