@@ -90,7 +90,9 @@ RUN npm install -g mongosh
 # Create a symlink to rename 'mongosh' to 'mongo'
 RUN ln -s /usr/local/bin/mongosh /usr/local/bin/mongo
 
-# IonCube loader not included for PHP 8.4. Add appropriate loader manually if required.
+# IonCube loader for PHP 8.4
+RUN mkdir -p /usr/local/php/ext/ioncube
+COPY ./ioncube_loader_lin-musl_8.4.so /usr/local/php/ext/ioncube/
 
 #Install Composer
 RUN wget https://getcomposer.org/installer -O composer-setup.php
