@@ -81,8 +81,9 @@ chmod -Rf 2770 /var/www/.npm-global
 chown -Rf apache.apache /var/www/.npm-global
 
 #Install Composer
-curl -sS https://getcomposer.org/installer | php
+curl -sS https://getcomposer.org/installer | /usr/bin/php84
 mv composer.phar /usr/bin/composer
+chmod +x /usr/bin/composer
 
 #Install IonCube
 wget http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
