@@ -1,15 +1,21 @@
 #Install Package Repos (REMI, EPEL)
 dnf -y remove php* httpd*
 
-#Install Required Devtools
-dnf -y install gcc-c++ gcc pcre-devel make zip unzip wget curl cmake git dnf-utils sudo sendmail tar jq
+#Install dnf-plugins-core first
+dnf -y install dnf-plugins-core
+
+#Install critical tools immediately
+dnf -y install wget curl unzip tar
 
 #Install Required Repos
-dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
-dnf install -y https://rpms.remirepo.net/enterprise/remi-release-9.rpm
-dnf -y --enablerepo=epel install sshpass
-dnf config-manager --disable 'remi-php*'
-dnf config-manager --setopt="remi-php84.priority=5" --enable remi-php84
+dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm --skip-broken --allowerasing || true
+dnf install -y https://rpms.remirepo.net/enterprise/remi-release-9.rpm --skip-broken --allowerasing || true
+dnf -y --enablerepo=epel install sshpass || dnf -y install sshpass
+dnf config-manager --disable 'remi-php*' || true
+dnf config-manager --setopt="remi-php84.priority=5" --enable remi-php84 || true
+
+#Install remaining devtools
+dnf -y install gcc-c++ gcc pcre-devel make zip cmake git dnf-utils sudo sendmail jq
 
 #Update all libs
 dnf update -y
