@@ -23,8 +23,18 @@ unzip awscliv2.zip
 dnf install -y httpd
 sed -i 's/LoadModule mpm_prefork_module/#LoadModule mpm_prefork_module/g' /etc/httpd/conf.modules.d/00-mpm.conf
 sed -i 's/#LoadModule mpm_event_module/LoadModule mpm_event_module/g' /etc/httpd/conf.modules.d/00-mpm.conf
-systemctl start httpd
-systemctl enable httpd
+
+# Helper function to handle systemd in Docker
+systemctl_wrapper() {
+    if [ -d /sys/fs/cgroup/systemd ] || [ -f /.dockerenv ]; then
+        systemctl enable "$1" || true
+    else
+        systemctl enable "$1"
+        systemctl start "$1"
+    fi
+}
+
+systemctl_wrapper httpd
 
 #Install SSL
 dnf -y install openssl openssl-devel mod_ssl
@@ -32,7 +42,7 @@ sed -i 's/SSLProtocol all -SSLv2$/SSLProtocol all -SSLv2 -SSLv3/g' /etc/httpd/co
 
 #Helm
 export PATH=/usr/bin:$PATH
-which tar || dnf install -y tar
+command -v tar &>/dev/null || dnf install -y tar
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 chmod 700 get_helm.sh
 ./get_helm.sh
@@ -43,8 +53,10 @@ php-devel php-mysqlnd php-pdo \
 php-gd php-mbstring php-pear php-soap php-tidy \
 php-pecl-redis php-opcache
 
-# Install optional PECL packages if available
-dnf install -y php-pecl-apcu || echo "APCu not available, skipping..."
+# Install APCu via PECL
+pecl install apcu
+echo "extension=apcu.so" > /etc/php.d/40-apcu.ini
+echo "apc.enabled=1" >> /etc/php.d/40-apcu.ini
 
 # Install MongoDB Server and PHP extension
 cat > /etc/yum.repos.d/mongodb-org-7.0.repo <<'EOF'
@@ -57,8 +69,7 @@ gpgkey=https://pgp.mongodb.com/server-7.0.asc
 EOF
 
 dnf install -y mongodb-org mongodb-mongosh
-systemctl enable mongod
-systemctl start mongod
+systemctl_wrapper mongod
 
 # Install MongoDB PHP driver via PECL
 dnf install -y php-pear php-devel openssl-devel
@@ -163,9 +174,8 @@ echo "opcache_revalidate_freq = 240" >>${PHP_INI}
 echo "zend_extension=${PHP_EXT_DIR}/ioncube_loader.so" >>${PHP_INI}
 
 #Activate
-systemctl enable php-fpm
-systemctl start php-fpm
-systemctl restart httpd
+systemctl_wrapper php-fpm
+systemctl_wrapper httpd || true
 
 #Cleanup
 rm -Rf /root/.ssh
