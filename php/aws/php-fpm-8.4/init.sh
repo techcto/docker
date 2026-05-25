@@ -51,7 +51,7 @@ chmod 700 get_helm.sh
 dnf install -y tidy php php-fpm php-common php-sodium \
 php-devel php-mysqlnd php-pdo \
 php-gd php-mbstring php-pear php-soap php-tidy \
-php-pecl-redis php-opcache
+php-pecl-redis php-opcache php-pecl-sockets
 
 # Install APCu via PECL
 pecl install apcu

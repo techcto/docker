@@ -65,6 +65,7 @@ RUN docker-php-ext-install \
 	xsl \
 	zip \
 	; \
+	docker-php-ext-enable sockets; \
 	pecl install \
 	apcu \
 	oauth \
