@@ -135,13 +135,8 @@ chown -Rf apache.apache /var/www/.npm
 chmod -Rf 2770 /var/www/.npm-global
 chown -Rf apache.apache /var/www/.npm-global
 
-# Verify PHP is installed
-if ! command -v php &> /dev/null; then
-    echo "ERROR: PHP 8.4 installation failed." && exit 1
-fi
-
-#Install Composer (pinned to 2.10 — required by private packagist)
-curl -sS https://getcomposer.org/installer | php -- --2.10
+#Install Composer
+curl -sS https://getcomposer.org/installer | php
 mv composer.phar /usr/bin/composer
 chmod +x /usr/bin/composer
 
