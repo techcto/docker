@@ -118,6 +118,7 @@ echo "listen.mode = 0660" >> "${PHP_FPM_D}/www.conf"
 
 #Install Node
 mkdir -p /var/www/.npm
+mkdir -p /var/www/.npm-global
 echo 'export NODE_PATH=/var/www/.npm-global/lib/node_modules' >> /var/www/.npmrc
 echo 'export PATH=$PATH:/var/www/.npm-global/bin' >> /var/www/.npmrc
 export PATH=/var/www/.npm-global/bin:$PATH
@@ -125,9 +126,9 @@ export PATH=/var/www/.npm-global/bin:$PATH
 # Install Node.js (Amazon Linux 2023 native)
 dnf install -y nodejs npm
 
+npm config set prefix '/var/www/.npm-global'
 npm install -g autoprefixer clean-css-cli nodemon npm-run-all postcss-cli postcss-discard-empty shx uglify-js
 npm install -g -f --unsafe-perm node-sass
-npm config set prefix '/var/www/.npm-global'
 chmod 2770 /var/www/.npmrc
 chown apache.apache /var/www/.npmrc
 chmod -Rf 2770 /var/www/.npm
