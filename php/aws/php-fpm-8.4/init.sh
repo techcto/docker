@@ -48,10 +48,17 @@ chmod 700 get_helm.sh
 ./get_helm.sh
 
 #Install PHP-FPM 8.4 (Amazon Linux 2023)
+dnf module enable php:8.4 -y
 dnf install -y tidy php php-fpm php-common php-sodium \
 php-devel php-mysqlnd php-pdo \
 php-gd php-mbstring php-pear php-soap php-tidy \
 php-pecl-redis php-opcache php-pecl-sockets
+
+# Fail fast if wrong PHP version installed
+PHP_INSTALLED=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
+if [ "$PHP_INSTALLED" != "8.4" ]; then
+    echo "ERROR: PHP 8.4 required, got $PHP_INSTALLED" && exit 1
+fi
 
 # Install APCu via PECL
 pecl install apcu
@@ -75,9 +82,6 @@ systemctl_wrapper mongod
 dnf install -y php-pear php-devel openssl-devel
 pecl install mongodb
 echo "extension=mongodb.so" > /etc/php.d/40-mongodb.ini
-
-# Get PHP version
-PHP_VERSION=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
 
 #Configure PHP-FPM conf for Apache (php84-php.conf)
 rm -Rf /etc/httpd/conf.d/php.conf
@@ -129,8 +133,8 @@ if ! command -v php &> /dev/null; then
     dnf install -y php php-cli php-common
 fi
 
-#Install Composer
-curl -sS https://getcomposer.org/installer | php
+#Install Composer (pinned to 2.10 — required by private packagist)
+curl -sS https://getcomposer.org/installer | php -- --2.10
 mv composer.phar /usr/bin/composer
 chmod +x /usr/bin/composer
 
