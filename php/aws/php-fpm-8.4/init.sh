@@ -1,3 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+
 #Install Package Repos (REMI, EPEL)
 dnf -y remove php* httpd*
 
@@ -5,7 +8,7 @@ dnf -y remove php* httpd*
 dnf -y install dnf-plugins-core
 
 #Install critical tools immediately (including tar for helm)
-dnf -y install wget curl unzip tar gzip
+dnf -y install wget curl-minimal unzip tar gzip
 
 #Install remaining devtools
 dnf -y install gcc-c++ gcc pcre-devel make zip cmake git dnf-utils sudo sendmail jq sshpass
@@ -26,7 +29,7 @@ sed -i 's/#LoadModule mpm_event_module/LoadModule mpm_event_module/g' /etc/httpd
 
 # Helper function to handle systemd in Docker
 systemctl_wrapper() {
-    if [ -d /sys/fs/cgroup/systemd ] || [ -f /.dockerenv ]; then
+    if [ ! -d /run/systemd/system ]; then
         systemctl enable "$1" || true
     else
         systemctl enable "$1"
@@ -51,22 +54,23 @@ chmod 700 get_helm.sh
 dnf install -y tidy \
     php8.4 php8.4-fpm php8.4-common php8.4-sodium \
     php8.4-devel php8.4-mysqlnd php8.4-pdo \
-    php8.4-gd php8.4-mbstring php8.4-pear php8.4-soap php8.4-tidy \
-    php8.4-pecl-redis php8.4-opcache
+    php8.4-gd php8.4-mbstring php-pear php8.4-soap php8.4-tidy \
+    php8.4-pecl-apcu php8.4-pecl-redis6 php8.4-opcache
 
-# Make 'php' resolve to 8.4
-update-alternatives --set php /usr/bin/php8.4 2>/dev/null || ln -sf /usr/bin/php8.4 /usr/bin/php
+# Make 'php' resolve to 8.4 when the distro exposes a versioned binary.
+if [ -x /usr/bin/php8.4 ]; then
+    update-alternatives --set php /usr/bin/php8.4 2>/dev/null || ln -sf /usr/bin/php8.4 /usr/bin/php
+fi
+
+if ! command -v php &> /dev/null; then
+    echo "ERROR: PHP 8.4 installation failed." && exit 1
+fi
 
 # Fail fast if wrong PHP version installed
 PHP_VERSION=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
 if [ "$PHP_VERSION" != "8.4" ]; then
     echo "ERROR: PHP 8.4 required, got $PHP_VERSION" && exit 1
 fi
-
-# Install APCu via PECL
-pecl install apcu
-echo "extension=apcu.so" > /etc/php.d/40-apcu.ini
-echo "apc.enabled=1" >> /etc/php.d/40-apcu.ini
 
 # Install MongoDB Server and PHP extension
 cat > /etc/yum.repos.d/mongodb-org-7.0.repo <<'EOF'
@@ -82,7 +86,7 @@ dnf install -y mongodb-org mongodb-mongosh
 systemctl_wrapper mongod
 
 # Install MongoDB PHP driver via PECL
-dnf install -y php-pear php-devel openssl-devel
+dnf install -y php-pear php8.4-devel openssl-devel
 pecl install mongodb
 echo "extension=mongodb.so" > /etc/php.d/40-mongodb.ini
 
