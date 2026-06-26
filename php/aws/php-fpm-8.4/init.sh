@@ -47,17 +47,18 @@ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scrip
 chmod 700 get_helm.sh
 ./get_helm.sh
 
-#Install PHP-FPM 8.4 (Amazon Linux 2023)
-dnf module enable php:8.4 -y
+#Install PHP-FPM 8.4 (Amazon Linux 2023 via Remi)
+dnf install -y https://rpms.remirepo.net/amazon/remi-release-2023.rpm
+dnf module enable php:remi-8.4 -y
 dnf install -y tidy php php-fpm php-common php-sodium \
 php-devel php-mysqlnd php-pdo \
 php-gd php-mbstring php-pear php-soap php-tidy \
-php-pecl-redis php-opcache php-pecl-sockets
+php-pecl-redis php-opcache
 
 # Fail fast if wrong PHP version installed
-PHP_INSTALLED=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
-if [ "$PHP_INSTALLED" != "8.4" ]; then
-    echo "ERROR: PHP 8.4 required, got $PHP_INSTALLED" && exit 1
+PHP_VERSION=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
+if [ "$PHP_VERSION" != "8.4" ]; then
+    echo "ERROR: PHP 8.4 required, got $PHP_VERSION" && exit 1
 fi
 
 # Install APCu via PECL
