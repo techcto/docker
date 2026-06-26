@@ -47,13 +47,15 @@ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scrip
 chmod 700 get_helm.sh
 ./get_helm.sh
 
-#Install PHP-FPM 8.4 (Amazon Linux 2023 via Remi)
-dnf install -y https://rpms.remirepo.net/amazon/remi-release-2023.rpm
-dnf module enable php:remi-8.4 -y
-dnf install -y tidy php php-fpm php-common php-sodium \
-php-devel php-mysqlnd php-pdo \
-php-gd php-mbstring php-pear php-soap php-tidy \
-php-pecl-redis php-opcache
+#Install PHP-FPM 8.4 (Amazon Linux 2023 — explicit versioned packages)
+dnf install -y tidy \
+    php8.4 php8.4-fpm php8.4-common php8.4-sodium \
+    php8.4-devel php8.4-mysqlnd php8.4-pdo \
+    php8.4-gd php8.4-mbstring php8.4-pear php8.4-soap php8.4-tidy \
+    php8.4-pecl-redis php8.4-opcache
+
+# Make 'php' resolve to 8.4
+update-alternatives --set php /usr/bin/php8.4 2>/dev/null || ln -sf /usr/bin/php8.4 /usr/bin/php
 
 # Fail fast if wrong PHP version installed
 PHP_VERSION=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
@@ -99,15 +101,16 @@ echo ' SetHandler "proxy:unix:/run/php-fpm/www.sock|fcgi://localhost"' >> /etc/h
 echo "</FilesMatch>" >> /etc/httpd/conf.d/php84-php.conf
 
 # Ensure PHP-FPM config directory exists
-mkdir -p /etc/php-fpm.d
-if [ ! -f /etc/php-fpm.d/www.conf ]; then
-    cp /etc/php-fpm.d/www.conf.default /etc/php-fpm.d/www.conf 2>/dev/null || touch /etc/php-fpm.d/www.conf
+PHP_FPM_D=$(find /etc -maxdepth 1 -name "php*fpm.d" -type d 2>/dev/null | head -1)
+[ -z "$PHP_FPM_D" ] && PHP_FPM_D="/etc/php8.4-fpm.d" && mkdir -p "$PHP_FPM_D"
+if [ ! -f "${PHP_FPM_D}/www.conf" ]; then
+    cp "${PHP_FPM_D}/www.conf.default" "${PHP_FPM_D}/www.conf" 2>/dev/null || touch "${PHP_FPM_D}/www.conf"
 fi
 
-echo "security.limit_extensions = .php .stml" >> /etc/php-fpm.d/www.conf
-echo "listen = /run/php-fpm/www.sock" >> /etc/php-fpm.d/www.conf
-echo "listen.owner = apache" >> /etc/php-fpm.d/www.conf
-echo "listen.mode = 0660" >> /etc/php-fpm.d/www.conf
+echo "security.limit_extensions = .php .stml" >> "${PHP_FPM_D}/www.conf"
+echo "listen = /run/php-fpm/www.sock" >> "${PHP_FPM_D}/www.conf"
+echo "listen.owner = apache" >> "${PHP_FPM_D}/www.conf"
+echo "listen.mode = 0660" >> "${PHP_FPM_D}/www.conf"
 
 #Install Node
 mkdir -p /var/www/.npm
@@ -130,8 +133,7 @@ chown -Rf apache.apache /var/www/.npm-global
 
 # Verify PHP is installed
 if ! command -v php &> /dev/null; then
-    echo "ERROR: PHP installation failed. Retrying..."
-    dnf install -y php php-cli php-common
+    echo "ERROR: PHP 8.4 installation failed." && exit 1
 fi
 
 #Install Composer (pinned to 2.10 — required by private packagist)
@@ -150,7 +152,8 @@ PHP_EXT_DIR=$(php -r "echo ini_get('extension_dir');")
 cp ioncube_loader_lin_${PHP_VERSION}.so ${PHP_EXT_DIR}/ || cp ioncube_loader_lin_8.*.so ${PHP_EXT_DIR}/ioncube_loader.so
 
 #Configure php.ini
-PHP_INI="/etc/php.ini"
+PHP_INI=$(php --ini | grep "Loaded Configuration" | awk '{print $NF}')
+[ -z "$PHP_INI" ] && PHP_INI="/etc/php.ini"
 echo "short_open_tag = On" >> ${PHP_INI}
 echo "expose_php = Off" >>${PHP_INI}
 echo "max_execution_time = 90" >>${PHP_INI}
@@ -179,7 +182,7 @@ echo "opcache_revalidate_freq = 240" >>${PHP_INI}
 echo "zend_extension=${PHP_EXT_DIR}/ioncube_loader.so" >>${PHP_INI}
 
 #Activate
-systemctl_wrapper php-fpm
+systemctl_wrapper php8.4-fpm
 systemctl_wrapper httpd || true
 
 #Cleanup
