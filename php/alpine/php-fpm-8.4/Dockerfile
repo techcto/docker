@@ -37,14 +37,14 @@ RUN set -ex; \
 	zip libzip-dev unzip wget ;
 
 # get latest of these (regular apk version has vulnerabilities)
-RUN apk del openssl && \ 
+RUN apk del openssl && \
 	apk add --no-cache -X https://dl-cdn.alpinelinux.org/alpine/edge/main git openssl curl nodejs && \
 	apk add --no-cache -X https://dl-cdn.alpinelinux.org/alpine/edge/community npm
 
 RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg;
 RUN docker-php-ext-configure zip;
 RUN docker-php-ext-install \
-	bcmath \	
+	bcmath \
 	bz2 \
 	calendar \
 	dba \
@@ -60,10 +60,6 @@ RUN docker-php-ext-install \
 	sysvsem \
 	sysvshm \
 	tidy \
-	gd \
-	# wddx \
-	xsl \
-	zip \
 	; \
 	docker-php-ext-enable sockets; \
 	pecl install \
@@ -82,6 +78,9 @@ RUN docker-php-ext-install \
 	; \
 	rm -rf /tmp/pear ~/.pearrc; \
 	php --version
+
+RUN docker-php-ext-install gd xsl zip \
+	&& php -r 'foreach (["gd", "xsl", "zip"] as $extension) { if (!extension_loaded($extension)) { fwrite(STDERR, "Missing PHP extension: {$extension}\n"); exit(1); } }'
 
 RUN pecl install mongodb; \
 	docker-php-ext-enable mongodb;
