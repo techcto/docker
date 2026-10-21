@@ -1,5 +1,5 @@
 #!/bin/bash
-#docker pull techcto/alpine-php-fpm-7.2:latest
+#docker pull techcto/alpine-php-fpm-7.2:latest --
 
 export $(egrep -v '^#' .env | xargs)
 args=("$@")
