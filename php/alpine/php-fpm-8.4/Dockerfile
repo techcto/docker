@@ -1,4 +1,4 @@
-FROM php:8.4-fpm-alpine
+FROM php:8.4.26-fpm-alpine
 
 ENV TIDY_VERSION=5.1.25
 RUN apk update && apk upgrade

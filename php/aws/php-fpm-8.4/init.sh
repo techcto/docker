@@ -111,6 +111,10 @@ if [ ! -f "${PHP_FPM_D}/www.conf" ]; then
     cp "${PHP_FPM_D}/www.conf.default" "${PHP_FPM_D}/www.conf" 2>/dev/null || touch "${PHP_FPM_D}/www.conf"
 fi
 
+echo "php_admin_flag[session.upload_progress.enabled] = off" >> "${PHP_FPM_D}/www.conf"
+echo "php_admin_value[memory_limit] = -1" >> "${PHP_FPM_D}/www.conf"
+echo "php_admin_value[post_max_size] = 32M" >> "${PHP_FPM_D}/www.conf"
+echo "php_admin_value[upload_max_filesize] = 16M" >> "${PHP_FPM_D}/www.conf"
 echo "security.limit_extensions = .php .stml" >> "${PHP_FPM_D}/www.conf"
 echo "listen = /run/php-fpm/www.sock" >> "${PHP_FPM_D}/www.conf"
 echo "listen.owner = apache" >> "${PHP_FPM_D}/www.conf"
@@ -159,11 +163,13 @@ echo "expose_php = Off" >>${PHP_INI}
 echo "max_execution_time = 90" >>${PHP_INI}
 echo "max_input_time = 90" >>${PHP_INI}
 echo "error_reporting = E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT & ~E_WARNING" >>${PHP_INI}
-echo "post_max_size = 60M" >>${PHP_INI}
-echo "upload_max_filesize = 60M" >>${PHP_INI}
+echo "post_max_size = 32M" >>${PHP_INI}
+echo "upload_max_filesize = 16M" >>${PHP_INI}
 #echo "allow_url_fopen = Off" >>${PHP_INI}
 echo "date.timezone = UTC" >>${PHP_INI}
 echo "realpath_cache_size = 1M" >>${PHP_INI}
+echo "memory_limit = -1" >>${PHP_INI}
+echo "session.upload_progress.enabled = Off" >>${PHP_INI}
 echo "session.cookie_httponly = 1" >>${PHP_INI}
 echo "[apcu]" >>${PHP_INI}
 echo "apc.enabled=1" >>${PHP_INI}
