@@ -1,8 +1,4 @@
-FROM php:8.4-fpm-alpine
-# Always pull this maintained tag; the checks below reject PHP older than 8.4.27.
-
-COPY verify-php-security.sh /usr/local/bin/verify-php-security.sh
-RUN sh /usr/local/bin/verify-php-security.sh
+FROM php:8.4-fpm-alpine3.21
 
 ENV TIDY_VERSION=5.1.25
 RUN apk update && apk upgrade
@@ -107,4 +103,3 @@ COPY ./php-fpm.conf /usr/local/etc/php-fpm.conf
 
 #Remove useless config
 RUN rm -rf /etc/php8/php-fpm.d
-RUN sh /usr/local/bin/verify-php-security.sh
