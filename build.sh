@@ -1,17 +1,23 @@
 #!/bin/sh
-# Usage: ./build.sh context namespace image [version]
-set -eu
-image="$2/$3"
-version="${4:-}"
+set -e
 
-docker build --pull --no-cache --tag "$image:latest" "$1/."
-if [ -n "$version" ]; then
-    docker tag "$image:latest" "$image:$version"
+#- IE: ./build.sh php/alpine/php-fpm-7.2 techcto alpine-php-fpm-7.2
+IMAGE=$2/$3
+
+docker build --pull --tag $IMAGE:latest $1/.
+
+if [ -n "$4" ]; then
+  docker build --pull --tag $IMAGE:$4 $1/.
+else
+  echo "No tag supplied"
 fi
 
-docker push "$image:latest"
-if [ -n "$version" ]; then
-    docker push "$image:$version"
+docker push $IMAGE:latest
+if [ -n "$4" ]; then
+  docker push $IMAGE:$4
+else
+  echo ""
 fi
 
-docker images "$image"
+echo "After:"
+docker images $IMAGE

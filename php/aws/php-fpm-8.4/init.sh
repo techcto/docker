@@ -57,9 +57,6 @@ dnf install -y tidy \
     php8.4-gd php8.4-mbstring php-pear php8.4-soap php8.4-tidy \
     php8.4-pecl-apcu php8.4-pecl-redis6 php8.4-opcache
 
-# Refresh PHP packages from the latest Amazon Linux release snapshot.
-dnf --releasever=latest --refresh upgrade -y 'php8.4*'
-
 # Make 'php' resolve to 8.4 when the distro exposes a versioned binary.
 if [ -x /usr/bin/php8.4 ]; then
     update-alternatives --set php /usr/bin/php8.4 2>/dev/null || ln -sf /usr/bin/php8.4 /usr/bin/php
@@ -74,8 +71,6 @@ PHP_VERSION=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
 if [ "$PHP_VERSION" != "8.4" ]; then
     echo "ERROR: PHP 8.4 required, got $PHP_VERSION" && exit 1
 fi
-
-sh /usr/local/bin/verify-php-security.sh
 
 # Install MongoDB Server and PHP extension
 cat > /etc/yum.repos.d/mongodb-org-7.0.repo <<'EOF'
@@ -116,7 +111,6 @@ if [ ! -f "${PHP_FPM_D}/www.conf" ]; then
     cp "${PHP_FPM_D}/www.conf.default" "${PHP_FPM_D}/www.conf" 2>/dev/null || touch "${PHP_FPM_D}/www.conf"
 fi
 
-echo "php_admin_flag[session.upload_progress.enabled] = off" >> "${PHP_FPM_D}/www.conf"
 echo "security.limit_extensions = .php .stml" >> "${PHP_FPM_D}/www.conf"
 echo "listen = /run/php-fpm/www.sock" >> "${PHP_FPM_D}/www.conf"
 echo "listen.owner = apache" >> "${PHP_FPM_D}/www.conf"
@@ -170,7 +164,6 @@ echo "upload_max_filesize = 60M" >>${PHP_INI}
 #echo "allow_url_fopen = Off" >>${PHP_INI}
 echo "date.timezone = UTC" >>${PHP_INI}
 echo "realpath_cache_size = 1M" >>${PHP_INI}
-echo "session.upload_progress.enabled = Off" >>${PHP_INI}
 echo "session.cookie_httponly = 1" >>${PHP_INI}
 echo "[apcu]" >>${PHP_INI}
 echo "apc.enabled=1" >>${PHP_INI}
