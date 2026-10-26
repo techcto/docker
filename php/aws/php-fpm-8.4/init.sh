@@ -153,7 +153,7 @@ wget http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.t
 tar -xzf ioncube_loaders_lin_x86-64.tar.gz
 cd ioncube/
 PHP_EXT_DIR=$(php -r "echo ini_get('extension_dir');")
-cp ioncube_loader_lin_${PHP_VERSION}.so ${PHP_EXT_DIR}/ || cp ioncube_loader_lin_8.*.so ${PHP_EXT_DIR}/ioncube_loader.so
+cp "ioncube_loader_lin_${PHP_VERSION}.so" "${PHP_EXT_DIR}/ioncube_loader.so"
 
 #Configure php.ini
 PHP_INI=$(php --ini | grep "Loaded Configuration" | awk '{print $NF}')
@@ -188,7 +188,7 @@ echo "opcache_revalidate_freq = 240" >>${PHP_INI}
 echo "zend_extension=${PHP_EXT_DIR}/ioncube_loader.so" >>${PHP_INI}
 
 #Activate
-systemctl_wrapper php8.4-fpm
+systemctl_wrapper php-fpm
 systemctl_wrapper httpd || true
 
 #Cleanup

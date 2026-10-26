@@ -13,6 +13,7 @@ RUN set -ex; \
 	libjpeg-turbo-dev \
 	libpng-dev \
 	libtool \
+	linux-headers \
 	libxml2-dev \
 	libxslt-dev \
 	libssh2-dev \
@@ -43,7 +44,8 @@ RUN apk del openssl && \
 
 RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg;
 RUN docker-php-ext-configure zip;
-RUN docker-php-ext-install \
+RUN set -eux; \
+	docker-php-ext-install \
 	bcmath \
 	bz2 \
 	calendar \
